@@ -2,45 +2,22 @@ import { AppBar, Box, Tab, Tabs, Toolbar } from "@mui/material";
 import { useCallback, useState } from "react";
 import SearchInput from "../../components/search-input";
 import ExploreOutlinedIcon from "@mui/icons-material/ExploreOutlined";
-
-const TABS = [
-  {
-    id: "all",
-    label: "All",
-  },
-  {
-    id: "eth",
-    label: "Ethereum",
-  },
-  {
-    id: "bsc",
-    label: "Binance",
-  },
-  {
-    id: "sol",
-    label: "Solana",
-  },
-  {
-    id: "avax",
-    label: "Avalanche",
-  },
-  {
-    id: "terra",
-    label: "Terra",
-  },
-];
+import { SingleMatrix } from "../../redux/pumpkin-api/types";
 
 const Header = ({
-  onTabSelected: onTabSelectedOuter,
+  chains,
+  onChainChanged,
 }: {
-  onTabSelected: (id: string) => void;
+  chains: Array<SingleMatrix>;
+  onChainChanged: (id: string) => void;
 }) => {
+  const tabs = [{ id: "all", name: "All" }, ...chains];
   const [selectedTab, setSelectedTab] = useState<string>("all");
 
   const onTabSelected = useCallback(
     (id: string) => {
       setSelectedTab(id);
-      onTabSelectedOuter(id);
+      onChainChanged(id === "all" ? "" : id);
     },
     [setSelectedTab]
   );
@@ -55,15 +32,17 @@ const Header = ({
         <Toolbar>
           <ExploreOutlinedIcon sx={{ fontSize: 50 }} />
           <Box marginLeft={16} />
-          <Tabs
-            variant={"fullWidth"}
-            value={selectedTab}
-            onChange={(_, newTabId) => onTabSelected(newTabId)}
-          >
-            {TABS.map((i) => (
-              <Tab key={i.id} label={i.label} value={i.id} />
-            ))}
-          </Tabs>
+          {Array.isArray(tabs) && tabs.length > 1 ? (
+            <Tabs
+              variant={"fullWidth"}
+              value={selectedTab}
+              onChange={(_, newTabId) => onTabSelected(newTabId)}
+            >
+              {tabs.map((i) => (
+                <Tab key={i.id} label={i.name} value={i.id} />
+              ))}
+            </Tabs>
+          ) : null}
           <Box flexGrow={1} />
           <SearchInput />
           <Box marginRight={8} />
