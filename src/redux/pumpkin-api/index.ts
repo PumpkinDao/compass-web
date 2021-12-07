@@ -25,7 +25,9 @@ const index = createApi({
 
         if (typeof args === "object") {
           Array.isArray(args.protocolId) &&
-            (args.protocolId = args.protocolId.join(","));
+            (args = Object.assign({}, args, {
+              protocolId: args.protocolId.join(","),
+            }));
 
           const params = new URLSearchParams(args as never);
           uri += "?" + params.toString();

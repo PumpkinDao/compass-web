@@ -2,6 +2,8 @@ export type SingleMatrix = {
   id: string;
   name: string;
   url?: string;
+  tags?: string[];
+  chainIds?: string[];
 };
 
 export type MatrixResult = {

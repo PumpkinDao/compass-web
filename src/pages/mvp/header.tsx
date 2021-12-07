@@ -1,26 +1,18 @@
 import { AppBar, Box, Tab, Tabs, Toolbar } from "@mui/material";
-import { useCallback, useState } from "react";
 import SearchInput from "../../components/search-input";
 import ExploreOutlinedIcon from "@mui/icons-material/ExploreOutlined";
 import { SingleMatrix } from "../../redux/pumpkin-api/types";
 
 const Header = ({
+  selectedChainId,
   chains,
   onChainChanged,
 }: {
+  selectedChainId: string;
   chains: Array<SingleMatrix>;
   onChainChanged: (id: string) => void;
 }) => {
   const tabs = [{ id: "all", name: "All" }, ...chains];
-  const [selectedTab, setSelectedTab] = useState<string>("all");
-
-  const onTabSelected = useCallback(
-    (id: string) => {
-      setSelectedTab(id);
-      onChainChanged(id === "all" ? "" : id);
-    },
-    [setSelectedTab]
-  );
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -35,8 +27,10 @@ const Header = ({
           {Array.isArray(tabs) && tabs.length > 1 ? (
             <Tabs
               variant={"fullWidth"}
-              value={selectedTab}
-              onChange={(_, newTabId) => onTabSelected(newTabId)}
+              value={selectedChainId ? selectedChainId : "all"}
+              onChange={(_, tabId) =>
+                onChainChanged(tabId === "all" ? "" : tabId)
+              }
             >
               {tabs.map((i) => (
                 <Tab key={i.id} label={i.name} value={i.id} />

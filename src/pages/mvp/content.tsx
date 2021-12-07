@@ -14,11 +14,61 @@ import { useCallback, useMemo, useState } from "react";
 import { DataGrid, GridColDef, GridOverlay } from "@mui/x-data-grid";
 import { PoolsResult, SingleMatrix } from "../../redux/pumpkin-api/types";
 
+type ContentProps = {
+  selectedChainId: string;
+  tokens: Array<SingleMatrix>;
+  tags: Array<SingleMatrix>;
+  protocols: Array<SingleMatrix>;
+  onFilterChanged: (type: string, val: string) => void;
+  onSortChanged: (type: string, val: string) => void;
+  isFetchingPools: boolean;
+  poolsResult: PoolsResult | undefined;
+  pageIndex: number;
+  pageSize: number;
+  onPageSizeChanged: (pageSize: number) => void;
+  onPageIndexChange: (pageIndex: number) => void;
+};
+
+const Content = ({
+  selectedChainId,
+  tokens,
+  tags,
+  protocols,
+  onFilterChanged,
+  onSortChanged,
+  isFetchingPools,
+  poolsResult,
+  pageIndex,
+  pageSize,
+  onPageSizeChanged,
+  onPageIndexChange,
+}: ContentProps) => {
+  return (
+    <Container maxWidth={"lg"}>
+      <FiltersBlock
+        key={`filter-${selectedChainId}`}
+        tokens={tokens}
+        tags={tags}
+        protocols={protocols}
+        onFilterChanged={onFilterChanged}
+      />
+      <Box marginTop={8} />
+      <DataBlock
+        pageIndex={pageIndex}
+        pageSize={pageSize}
+        onPageSizeChanged={onPageSizeChanged}
+        onPageIndexChange={onPageIndexChange}
+        isFetchingPools={isFetchingPools}
+        poolsResult={poolsResult}
+        onSortChanged={onSortChanged}
+      />
+    </Container>
+  );
+};
+
 const PoolFilterGroup = ({
   onFilterChanged,
-}: {
-  onFilterChanged: (type: string, val: string) => void;
-}) => {
+}: Pick<ContentProps, "onFilterChanged">) => {
   const [selectedId, setSelectedId] = useState<string>("all");
   const onChange = useCallback(
     (id: string) => {
@@ -41,18 +91,17 @@ const PoolFilterGroup = ({
   );
 };
 
-const PLACEHOLDER = "placeholder";
-
 const DetailFilter = ({
   label,
   items,
   onItemSelected: onItemSelectedOuter,
 }: {
   label: string;
-  items: Array<{ id: string; name: string }>;
+  items: Array<SingleMatrix>;
   onItemSelected: (id: string) => void;
 }) => {
-  items = [{ id: PLACEHOLDER, name: "CANCEL" }, ...items];
+  const PLACEHOLDER = "placeholder";
+  items = [{ id: PLACEHOLDER, name: label }, ...items];
   const [selectedId, setSelectedId] = useState<string>("");
 
   const onItemSelected = useCallback(
@@ -61,7 +110,7 @@ const DetailFilter = ({
       setSelectedId(id);
       onItemSelectedOuter(id);
     },
-    [setSelectedId]
+    [setSelectedId, onItemSelectedOuter]
   );
 
   return (
@@ -89,15 +138,33 @@ const DetailFilter = ({
 
 const DetailFilterGroup = ({
   tokens,
-  categories,
+  tags,
   protocols,
   onFilterChanged,
-}: {
-  tokens: Array<SingleMatrix>;
-  categories: Array<SingleMatrix>;
-  protocols: Array<SingleMatrix>;
-  onFilterChanged: (type: string, val: string) => void;
-}) => {
+}: Pick<ContentProps, "tokens" | "tags" | "protocols" | "onFilterChanged">) => {
+  const [tag, setTag] = useState<string>("");
+
+  const searchProtocolIdsByTag = useMemo(() => {
+    return protocols.reduce<Record<string, Set<string>>>((acc, cur) => {
+      cur.tags?.forEach((tag) => {
+        if (!acc[tag]) {
+          acc[tag] = new Set();
+        }
+        acc[tag].add(cur.id);
+      });
+      return acc;
+    }, {});
+  }, [protocols]);
+
+  const subProtocols = useMemo(() => {
+    if (tag && protocols) {
+      const protocolIds = searchProtocolIdsByTag[tag];
+      return protocols.filter((i) => protocolIds.has(i.id));
+    } else {
+      return protocols;
+    }
+  }, [tag, searchProtocolIdsByTag, protocols]);
+
   return (
     <Stack direction={"row"} spacing={2}>
       <DetailFilter
@@ -107,12 +174,16 @@ const DetailFilterGroup = ({
       />
       <DetailFilter
         label={"Category"}
-        items={categories}
-        onItemSelected={(id) => onFilterChanged("tag", id)}
+        items={tags}
+        onItemSelected={(id) => {
+          setTag(id);
+          onFilterChanged("tag", id);
+        }}
       />
       <DetailFilter
+        key={`Protocols<${tag}>`}
         label={"Protocol"}
-        items={protocols}
+        items={subProtocols}
         onItemSelected={(id) => onFilterChanged("protocol", id)}
       />
     </Stack>
@@ -121,15 +192,10 @@ const DetailFilterGroup = ({
 
 const FiltersBlock = ({
   tokens,
-  categories,
+  tags,
   protocols,
   onFilterChanged,
-}: {
-  tokens: Array<SingleMatrix>;
-  categories: Array<SingleMatrix>;
-  protocols: Array<SingleMatrix>;
-  onFilterChanged: (type: string, val: string) => void;
-}) => {
+}: Pick<ContentProps, "tokens" | "tags" | "protocols" | "onFilterChanged">) => {
   return (
     <Stack
       direction={"row"}
@@ -139,7 +205,7 @@ const FiltersBlock = ({
       <PoolFilterGroup onFilterChanged={onFilterChanged} />
       <DetailFilterGroup
         tokens={tokens}
-        categories={categories}
+        tags={tags}
         protocols={protocols}
         onFilterChanged={onFilterChanged}
       />
@@ -155,8 +221,8 @@ const DATA_COLUMNS: GridColDef[] = [
     flex: 5,
     sortable: false,
   },
-  { field: "apy", headerName: "APY", flex: 2 },
   { field: "tvl", headerName: "TVL", flex: 2 },
+  { field: "apy", headerName: "APY", flex: 2 },
   { field: "link", headerName: "LINK", flex: 1, sortable: false },
 ];
 
@@ -169,12 +235,23 @@ const DataGridLoadingOverlay = () => (
 );
 
 const DataBlock = ({
+  pageIndex,
+  pageSize,
+  onPageSizeChanged,
+  onPageIndexChange,
   isFetchingPools,
   poolsResult,
-}: {
-  isFetchingPools: boolean;
-  poolsResult: PoolsResult | undefined;
-}) => {
+  onSortChanged,
+}: Pick<
+  ContentProps,
+  | "pageIndex"
+  | "pageSize"
+  | "onPageSizeChanged"
+  | "onPageIndexChange"
+  | "isFetchingPools"
+  | "poolsResult"
+  | "onSortChanged"
+>) => {
   const rows = useMemo(() => {
     return (poolsResult?.data || []).map((pool) => ({
       id: `${pool.protocolId}/${pool.chainId}/${pool.name}`,
@@ -188,50 +265,37 @@ const DataBlock = ({
   return (
     <DataGrid
       autoHeight
-      components={{
-        LoadingOverlay: DataGridLoadingOverlay,
-      }}
-      loading={isFetchingPools}
-      columns={DATA_COLUMNS}
-      rows={rows}
       disableSelectionOnClick
       disableColumnFilter
       disableColumnSelector
       disableColumnMenu
       disableDensitySelector
+      components={{
+        LoadingOverlay: DataGridLoadingOverlay,
+      }}
       sx={{ minHeight: 600 }}
-      pageSize={10}
+      sortingMode={"server"}
+      onSortModelChange={([sortItem]) =>
+        onSortChanged(
+          sortItem?.field || "",
+          typeof sortItem?.sort === "string" ? sortItem.sort : ""
+        )
+      }
+      pagination
+      paginationMode={"server"}
+      page={pageIndex}
+      onPageChange={(page) => onPageIndexChange(page)}
+      pageSize={pageSize}
+      onPageSizeChange={onPageSizeChanged}
+      rowsPerPageOptions={[15, 35, 50]}
       rowCount={poolsResult?.total || 0}
+      initialState={{
+        sorting: { sortModel: [{ field: "apy", sort: "desc" }] },
+      }}
+      loading={isFetchingPools}
+      columns={DATA_COLUMNS}
+      rows={rows}
     />
-  );
-};
-
-const Content = ({
-  tokens,
-  categories,
-  protocols,
-  onFilterChanged,
-  isFetchingPools,
-  poolsResult,
-}: {
-  tokens: Array<SingleMatrix>;
-  categories: Array<SingleMatrix>;
-  protocols: Array<SingleMatrix>;
-  onFilterChanged: (type: string, val: string) => void;
-  isFetchingPools: boolean;
-  poolsResult: PoolsResult | undefined;
-}) => {
-  return (
-    <Container maxWidth={"lg"}>
-      <FiltersBlock
-        tokens={tokens}
-        categories={categories}
-        protocols={protocols}
-        onFilterChanged={onFilterChanged}
-      />
-      <Box marginTop={8} />
-      <DataBlock isFetchingPools={isFetchingPools} poolsResult={poolsResult} />
-    </Container>
   );
 };
 
