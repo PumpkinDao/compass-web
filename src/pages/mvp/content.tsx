@@ -7,6 +7,7 @@ import {
   MenuItem,
   Select,
   Stack,
+  styled,
   ToggleButton,
   ToggleButtonGroup,
 } from "@mui/material";
@@ -218,12 +219,31 @@ const DATA_COLUMNS: GridColDef[] = [
   {
     field: "pool",
     headerName: "POOL",
-    flex: 5,
+    flex: 3,
     sortable: false,
   },
-  { field: "tvl", headerName: "TVL", flex: 2 },
-  { field: "apy", headerName: "APY", flex: 2 },
-  { field: "link", headerName: "LINK", flex: 1, sortable: false },
+  {
+    field: "apy",
+    headerName: "APY",
+    flex: 2,
+    headerAlign: "right",
+    align: "right",
+    cellClassName: "StyledDataGrid-cell-apy",
+  },
+  {
+    field: "tvl",
+    headerName: "TVL",
+    flex: 2,
+    type: "number",
+  },
+  {
+    field: "link",
+    headerName: "LINK",
+    flex: 3,
+    sortable: false,
+    headerAlign: "right",
+    align: "right",
+  },
 ];
 
 const DataGridLoadingOverlay = () => (
@@ -233,6 +253,39 @@ const DataGridLoadingOverlay = () => (
     </div>
   </GridOverlay>
 );
+
+const StyledDataGrid = styled(DataGrid)(() => ({
+  minHeight: 600,
+  border: "revert",
+  "& .MuiDataGrid-cell, & .MuiDataGrid-columnHeaders": {
+    border: "revert",
+  },
+  "& .MuiDataGrid-cell:focus, & .MuiDataGrid-columnHeader:focus, .MuiDataGrid-columnHeader:focus-within":
+    {
+      outline: "revert",
+    },
+  "& .MuiDataGrid-columnSeparator": {
+    display: "none",
+  },
+  "& .MuiDataGrid-columnHeader--alignRight .MuiDataGrid-columnHeaderTitleContainer":
+    {
+      flexDirection: "row",
+      justifyContent: "flex-end",
+    },
+  "& .MuiDataGrid-columnHeader .MuiDataGrid-iconButtonContainer, & .MuiDataGrid-columnHeader--sorted .MuiDataGrid-iconButtonContainer":
+    {
+      width: "auto",
+      visibility: "visible",
+    },
+  "& .MuiDataGrid-columnHeader:not(.MuiDataGrid-columnHeader--sorted) .MuiDataGrid-sortIcon":
+    {
+      opacity: "0.1",
+    },
+
+  "& .StyledDataGrid-cell-apy": {
+    color: "#56F00DD9",
+  },
+}));
 
 const DataBlock = ({
   pageIndex,
@@ -263,17 +316,18 @@ const DataBlock = ({
   }, [poolsResult]);
 
   return (
-    <DataGrid
+    <StyledDataGrid
       autoHeight
-      disableSelectionOnClick
       disableColumnFilter
-      disableColumnSelector
       disableColumnMenu
+      disableColumnSelector
       disableDensitySelector
+      disableSelectionOnClick
+      showCellRightBorder={false}
+      showColumnRightBorder={false}
       components={{
         LoadingOverlay: DataGridLoadingOverlay,
       }}
-      sx={{ minHeight: 600 }}
       sortingMode={"server"}
       onSortModelChange={([sortItem]) =>
         onSortChanged(

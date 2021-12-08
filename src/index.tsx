@@ -8,6 +8,9 @@ import { store } from "./redux/store";
 const darkModeTheme = createTheme({
   palette: {
     mode: "dark",
+    primary: {
+      main: "#1890FF",
+    },
   },
 });
 
