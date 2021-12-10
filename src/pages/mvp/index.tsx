@@ -26,7 +26,6 @@ const useBusiness = () => {
               !(typeof v === "undefined" || (typeof v === "string" && !v))
           )
         );
-        console.log("state: ", state);
         return state;
       });
     },
@@ -106,7 +105,6 @@ const useBusiness = () => {
 
   const onSortChanged = useCallback(
     (sortType: string, val: string) => {
-      console.log("sortType: ", sortType, ", val: ", val);
       let apyAsc: boolean | undefined = undefined;
       let tvlAsc: boolean | undefined = undefined;
 
@@ -134,7 +132,14 @@ const useBusiness = () => {
     [updatePoolsArg]
   );
 
-  console.log("poolsArg: ", poolsArg);
+  const onSearchSubmit = useCallback(
+    (protocolId: string) => {
+      protocolId = protocolId || "";
+      protocolId = protocolId.toLowerCase();
+      updatePoolsArg({ protocolId });
+    },
+    [updatePoolsArg]
+  );
 
   return {
     selectedChainId,
@@ -151,6 +156,7 @@ const useBusiness = () => {
     pageSize: poolsArg?.pageSize || 25,
     onPageSizeChanged,
     onPageIndexChanged,
+    onSearchSubmit,
   };
 };
 
@@ -170,6 +176,7 @@ const MVP = () => {
     pageSize,
     onPageSizeChanged,
     onPageIndexChanged,
+    onSearchSubmit,
   } = useBusiness();
 
   return (
@@ -178,6 +185,7 @@ const MVP = () => {
         selectedChainId={selectedChainId}
         chains={chains || []}
         onChainChanged={onChainChanged}
+        onSearchSubmit={onSearchSubmit}
       />
       <Box marginTop={16} />
       <Content

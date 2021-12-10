@@ -7,10 +7,12 @@ const Header = ({
   selectedChainId,
   chains,
   onChainChanged,
+  onSearchSubmit,
 }: {
   selectedChainId: string;
   chains: Array<SingleMatrix>;
   onChainChanged: (id: string) => void;
+  onSearchSubmit: (value: string) => void;
 }) => {
   const tabs = [{ id: "all", name: "All" }, ...chains];
 
@@ -38,7 +40,10 @@ const Header = ({
             </Tabs>
           ) : null}
           <Box flexGrow={1} />
-          <SearchInput />
+          <SearchInput
+            placeholder={"Search..."}
+            onSearchSubmit={onSearchSubmit}
+          />
           <Box marginRight={8} />
         </Toolbar>
       </AppBar>

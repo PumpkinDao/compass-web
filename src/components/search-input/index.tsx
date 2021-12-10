@@ -1,8 +1,9 @@
-import { alpha, InputBase, styled } from "@mui/material";
+import { alpha, IconButton, InputBase, Stack, styled } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+import { useCallback, useState } from "react";
 
-const Search = styled("div")(({ theme }) => ({
-  position: "relative",
+const Search = styled(Stack)(({ theme }) => ({
+  flexDirection: "row",
   borderRadius: 50,
   backgroundColor: alpha(theme.palette.common.white, 0.15),
   "&:hover": {
@@ -14,23 +15,18 @@ const Search = styled("div")(({ theme }) => ({
     marginLeft: theme.spacing(1),
     width: "auto",
   },
-}));
-
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
+  "& .MuiButtonBase-root": {
+    opacity: 0.5,
+  },
+  "&:hover .MuiButtonBase-root, &.Mui-focused .MuiButtonBase-root": {
+    opacity: 1,
+  },
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: "inherit",
   "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    padding: theme.spacing(1, 0, 1, 2),
     transition: theme.transitions.create("width"),
     width: "100%",
     [theme.breakpoints.up("sm")]: {
@@ -42,16 +38,30 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-const SearchInput = () => {
+const SearchInput = ({
+  placeholder,
+  onSearchSubmit,
+}: {
+  placeholder: string;
+  onSearchSubmit: (value: string) => void;
+}) => {
+  const [input, setInput] = useState<string>("");
+  const submit = useCallback(
+    () => onSearchSubmit(input),
+    [input, onSearchSubmit]
+  );
+
   return (
     <Search>
-      <SearchIconWrapper>
-        <SearchIcon />
-      </SearchIconWrapper>
       <StyledInputBase
-        placeholder="Search…"
-        inputProps={{ "aria-label": "search" }}
+        placeholder={placeholder}
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        onKeyPress={(e) => e.key === "Enter" && submit()}
       />
+      <IconButton onClick={submit}>
+        <SearchIcon />
+      </IconButton>
     </Search>
   );
 };
