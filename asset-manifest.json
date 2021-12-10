@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.js": "/static/js/main.d2f9dd7a.chunk.js",
-    "main.js.map": "/static/js/main.d2f9dd7a.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.34dbefca.js",
-    "runtime-main.js.map": "/static/js/runtime-main.34dbefca.js.map",
-    "static/js/2.895ff619.chunk.js": "/static/js/2.895ff619.chunk.js",
-    "static/js/2.895ff619.chunk.js.map": "/static/js/2.895ff619.chunk.js.map",
-    "index.html": "/index.html",
-    "static/js/2.895ff619.chunk.js.LICENSE.txt": "/static/js/2.895ff619.chunk.js.LICENSE.txt"
+    "main.js": "/compass-web/static/js/main.d2f9dd7a.chunk.js",
+    "main.js.map": "/compass-web/static/js/main.d2f9dd7a.chunk.js.map",
+    "runtime-main.js": "/compass-web/static/js/runtime-main.008b8ebb.js",
+    "runtime-main.js.map": "/compass-web/static/js/runtime-main.008b8ebb.js.map",
+    "static/js/2.5cbf4c1e.chunk.js": "/compass-web/static/js/2.5cbf4c1e.chunk.js",
+    "static/js/2.5cbf4c1e.chunk.js.map": "/compass-web/static/js/2.5cbf4c1e.chunk.js.map",
+    "index.html": "/compass-web/index.html",
+    "static/js/2.5cbf4c1e.chunk.js.LICENSE.txt": "/compass-web/static/js/2.5cbf4c1e.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.34dbefca.js",
-    "static/js/2.895ff619.chunk.js",
+    "static/js/runtime-main.008b8ebb.js",
+    "static/js/2.5cbf4c1e.chunk.js",
     "static/js/main.d2f9dd7a.chunk.js"
   ]
 }
