@@ -30,7 +30,7 @@ jobs:
       - name: Install and Build
         run: |
           yarn install --frozen-lockfile
-          PUBLIC_URL="https://pumpkindao.github.io/compass-web/" yarn build
+          yarn build
         env:
           REACT_APP_COMPASS_API_BASE_URL: "${{ secrets.REACT_APP_COMPASS_API_BASE_URL }}"
 
