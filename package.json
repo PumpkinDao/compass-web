@@ -2,6 +2,7 @@
   "name": "compass-web",
   "version": "0.3.0",
   "private": true,
+  "homepage": "https://pumpkindao.github.io/compass-web/",
   "dependencies": {
     "@emotion/react": "^11.6.0",
     "@emotion/styled": "^11.6.0",
