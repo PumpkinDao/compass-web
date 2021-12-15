@@ -19,7 +19,7 @@ export type PoolsArg =
       address?: string;
       pageIndex?: number;
       pageSize?: number;
-      apyAsc?: boolean;
+      aprAsc?: boolean;
       tvlAsc?: boolean;
     }
   | undefined;
@@ -37,7 +37,7 @@ export type PoolsResult =
         chainId: string;
         name: string;
         address: string;
-        apy: number;
+        apr: number;
         tvl: number;
         createdAt: number;
       }>;

@@ -223,12 +223,12 @@ const DATA_COLUMNS: GridColDef[] = [
     sortable: false,
   },
   {
-    field: "apy",
-    headerName: "APY",
+    field: "apr",
+    headerName: "APR",
     flex: 2,
     headerAlign: "right",
     align: "right",
-    cellClassName: "StyledDataGrid-cell-apy",
+    cellClassName: "StyledDataGrid-cell-apr",
   },
   {
     field: "tvl",
@@ -282,7 +282,7 @@ const StyledDataGrid = styled(DataGrid)(() => ({
       opacity: "0.1",
     },
 
-  "& .StyledDataGrid-cell-apy": {
+  "& .StyledDataGrid-cell-apr": {
     color: "#56F00DD9",
   },
 }));
@@ -310,7 +310,7 @@ const DataBlock = ({
       id: `${pool.protocolId}/${pool.chainId}/${pool.name}`,
       pool: pool.name,
       tvl: pool.tvl,
-      apy: `${(Number(pool.apy) * 100).toFixed(2)}%`,
+      apr: `${(Number(pool.apr) * 100).toFixed(2)}%`,
       link: pool.protocolId, // todo
     }));
   }, [poolsResult]);
@@ -344,7 +344,7 @@ const DataBlock = ({
       rowsPerPageOptions={[15, 35, 50]}
       rowCount={poolsResult?.total || 0}
       initialState={{
-        sorting: { sortModel: [{ field: "apy", sort: "desc" }] },
+        sorting: { sortModel: [{ field: "apr", sort: "desc" }] },
       }}
       loading={isFetchingPools}
       columns={DATA_COLUMNS}
