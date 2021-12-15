@@ -233,12 +233,12 @@ const renderPoolCell: GridColDef["renderCell"] = (params) => {
   return (
     <Stack>
       <Typography fontSize={16} fontWeight={"bold"}>
-        {pool?.name || "Unknown"}
+        {pool?.name || "---"}
       </Typography>
       <Box marginTop={"3px"} />
       <Stack direction={"row"} alignItems={"center"}>
         <Typography fontSize={14} fontWeight={"bold"}>
-          {protocol?.name || "Unknown"}
+          {protocol?.name || "---"}
         </Typography>
         <Box marginLeft={1} />
         {chain?.icon && (
@@ -264,7 +264,7 @@ const renderPoolCell: GridColDef["renderCell"] = (params) => {
 };
 
 const renderLinkCell: GridColDef["renderCell"] = (params) => {
-  const { link, name } = params.value || { link: "#", name: "Unknown" };
+  const { link, name } = params.value || { link: "#", name: "---" };
 
   return (
     <Link href={link} target={"_blank"} underline={"none"}>
@@ -382,7 +382,7 @@ const DataBlock = ({
       apr: `${(Number(pool.apr) * 100).toFixed(2)}%`,
       link: protocolsLookup[pool.protocolId],
     }));
-  }, [poolsResult]);
+  }, [poolsResult, chainsLookup, protocolsLookup]);
 
   return (
     <StyledDataGrid
@@ -393,7 +393,7 @@ const DataBlock = ({
       disableDensitySelector
       disableSelectionOnClick
       density={"comfortable"}
-      rowHeight={80}
+      rowHeight={65}
       showCellRightBorder={false}
       showColumnRightBorder={false}
       components={{

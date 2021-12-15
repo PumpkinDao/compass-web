@@ -3,18 +3,12 @@ import Header from "./header";
 import Content from "./content";
 import { useLazyPoolsQuery, useMatrixQuery } from "../../redux/pumpkin-api";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { PoolsArg, SingleMatrix } from "../../redux/pumpkin-api/types";
+import { PoolsArg } from "../../redux/pumpkin-api/types";
 
 const INIT_POOLS_ARG: PoolsArg = {
   pageIndex: 0,
   pageSize: 15,
   aprAsc: false,
-};
-
-const matrixList2Map = (
-  matrixList: SingleMatrix[]
-): { [id: string]: SingleMatrix } => {
-  return Object.fromEntries(matrixList.map((i) => [i.id, i]));
 };
 
 const useBusiness = () => {
@@ -89,7 +83,8 @@ const useBusiness = () => {
 
     const lookup = subProtocols.reduce<Record<string, Set<string>>>(
       (acc, cur) => {
-        cur.tags?.forEach((tag) => {
+        cur.tags?.forEach((tag: string) => {
+          tag = tag.toLowerCase();
           if (!acc[tag]) {
             acc[tag] = new Set();
           }
@@ -102,6 +97,7 @@ const useBusiness = () => {
 
     const tagSet = new Set(Object.keys(lookup));
     const subTags = (tags || []).filter((i) => tagSet.has(i.id));
+
     return [subProtocols, subTags, lookup];
   }, [selectedChainId, searchProtocolsByChain, protocols, tags]);
 
