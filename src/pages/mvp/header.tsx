@@ -41,7 +41,7 @@ const Header = ({
           ) : null}
           <Box flexGrow={1} />
           <SearchInput
-            placeholder={"Search..."}
+            placeholder={"Search Protocols"}
             onSearchSubmit={onSearchSubmit}
           />
           <Box marginRight={8} />
