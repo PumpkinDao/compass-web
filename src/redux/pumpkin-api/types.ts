@@ -1,7 +1,8 @@
 export type SingleMatrix = {
   id: string;
   name: string;
-  url?: string;
+  icon?: string;
+  link?: string;
   tags?: string[];
   chainIds?: string[];
 };
@@ -24,6 +25,16 @@ export type PoolsArg =
     }
   | undefined;
 
+export type Pool = {
+  protocolId: string;
+  chainId: string;
+  name: string;
+  address: string;
+  apr: number;
+  tvl: number;
+  createdAt: number;
+};
+
 export type PoolsResult =
   | undefined
   | {
@@ -32,13 +43,5 @@ export type PoolsResult =
         index: number;
       };
       total: number;
-      data: Array<{
-        protocolId: string;
-        chainId: string;
-        name: string;
-        address: string;
-        apr: number;
-        tvl: number;
-        createdAt: number;
-      }>;
+      data: Array<Pool>;
     };

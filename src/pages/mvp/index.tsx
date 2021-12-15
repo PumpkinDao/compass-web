@@ -3,7 +3,7 @@ import Header from "./header";
 import Content from "./content";
 import { useLazyPoolsQuery, useMatrixQuery } from "../../redux/pumpkin-api";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { PoolsArg } from "../../redux/pumpkin-api/types";
+import { PoolsArg, SingleMatrix } from "../../redux/pumpkin-api/types";
 
 const INIT_POOLS_ARG: PoolsArg = {
   pageIndex: 0,
@@ -11,9 +11,23 @@ const INIT_POOLS_ARG: PoolsArg = {
   aprAsc: false,
 };
 
+const matrixList2Map = (
+  matrixList: SingleMatrix[]
+): { [id: string]: SingleMatrix } => {
+  return Object.fromEntries(matrixList.map((i) => [i.id, i]));
+};
+
 const useBusiness = () => {
   const { data: matrix } = useMatrixQuery(undefined);
   const { chains, tags, protocols } = matrix || {};
+
+  const [chainsLookup, protocolsLookup] = useMemo(
+    () => [
+      Object.fromEntries((chains || []).map((i) => [i.id, i])),
+      Object.fromEntries((protocols || []).map((i) => [i.id, i])),
+    ],
+    [chains, protocols]
+  );
 
   const [poolsArg, setPoolsArg] = useState<PoolsArg>(INIT_POOLS_ARG);
   const updatePoolsArg = useCallback(
@@ -142,6 +156,8 @@ const useBusiness = () => {
   );
 
   return {
+    chainsLookup,
+    protocolsLookup,
     selectedChainId,
     chains: chains || [],
     tokens: [],
@@ -162,6 +178,8 @@ const useBusiness = () => {
 
 const MVP = () => {
   const {
+    chainsLookup,
+    protocolsLookup,
     selectedChainId,
     chains,
     tokens,
@@ -189,6 +207,8 @@ const MVP = () => {
       />
       <Box marginTop={16} />
       <Content
+        chainsLookup={chainsLookup}
+        protocolsLookup={protocolsLookup}
         selectedChainId={selectedChainId}
         tokens={tokens}
         tags={tags}

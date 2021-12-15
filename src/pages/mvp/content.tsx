@@ -4,18 +4,22 @@ import {
   FormControl,
   InputLabel,
   LinearProgress,
+  Link,
   MenuItem,
   Select,
   Stack,
   styled,
   ToggleButton,
   ToggleButtonGroup,
+  Typography,
 } from "@mui/material";
 import { useCallback, useMemo, useState } from "react";
 import { DataGrid, GridColDef, GridOverlay } from "@mui/x-data-grid";
-import { PoolsResult, SingleMatrix } from "../../redux/pumpkin-api/types";
+import { Pool, PoolsResult, SingleMatrix } from "../../redux/pumpkin-api/types";
 
 type ContentProps = {
+  chainsLookup: Record<string, SingleMatrix>;
+  protocolsLookup: Record<string, SingleMatrix>;
   selectedChainId: string;
   tokens: Array<SingleMatrix>;
   tags: Array<SingleMatrix>;
@@ -31,6 +35,8 @@ type ContentProps = {
 };
 
 const Content = ({
+  chainsLookup,
+  protocolsLookup,
   selectedChainId,
   tokens,
   tags,
@@ -62,6 +68,8 @@ const Content = ({
         isFetchingPools={isFetchingPools}
         poolsResult={poolsResult}
         onSortChanged={onSortChanged}
+        chainsLookup={chainsLookup}
+        protocolsLookup={protocolsLookup}
       />
     </Container>
   );
@@ -214,6 +222,57 @@ const FiltersBlock = ({
   );
 };
 
+const renderPoolCell: GridColDef["renderCell"] = (params) => {
+  const {
+    pool,
+    protocol,
+    chain,
+  }: { pool: Pool; protocol: SingleMatrix; chain: SingleMatrix } =
+    params.value || {};
+
+  return (
+    <Stack>
+      <Typography fontSize={16} fontWeight={"bold"}>
+        {pool?.name || "Unknown"}
+      </Typography>
+      <Box marginTop={"3px"} />
+      <Stack direction={"row"} alignItems={"center"}>
+        <Typography fontSize={14} fontWeight={"bold"}>
+          {protocol?.name || "Unknown"}
+        </Typography>
+        <Box marginLeft={1} />
+        {chain?.icon && (
+          <img
+            src={chain.icon}
+            alt={chain.name}
+            style={{ width: 12, height: 12 }}
+          />
+        )}
+      </Stack>
+      <Box marginTop={"3px"} />
+      {Array.isArray(protocol?.tags) && protocol.tags.length > 0 && (
+        <Typography
+          fontSize={12}
+          fontWeight={"bold"}
+          sx={{ color: "text.secondary" }}
+        >
+          {protocol.tags[0]}
+        </Typography>
+      )}
+    </Stack>
+  );
+};
+
+const renderLinkCell: GridColDef["renderCell"] = (params) => {
+  const { link, name } = params.value || { link: "#", name: "Unknown" };
+
+  return (
+    <Link href={link} target={"_blank"} underline={"none"}>
+      {name}
+    </Link>
+  );
+};
+
 const DATA_COLUMNS: GridColDef[] = [
   { field: "id", hide: true },
   {
@@ -221,6 +280,13 @@ const DATA_COLUMNS: GridColDef[] = [
     headerName: "POOL",
     flex: 3,
     sortable: false,
+    renderCell: renderPoolCell,
+  },
+  {
+    field: "tvl",
+    headerName: "TVL",
+    flex: 2,
+    type: "number",
   },
   {
     field: "apr",
@@ -231,18 +297,13 @@ const DATA_COLUMNS: GridColDef[] = [
     cellClassName: "StyledDataGrid-cell-apr",
   },
   {
-    field: "tvl",
-    headerName: "TVL",
-    flex: 2,
-    type: "number",
-  },
-  {
     field: "link",
     headerName: "LINK",
     flex: 3,
     sortable: false,
     headerAlign: "right",
     align: "right",
+    renderCell: renderLinkCell,
   },
 ];
 
@@ -295,6 +356,8 @@ const DataBlock = ({
   isFetchingPools,
   poolsResult,
   onSortChanged,
+  chainsLookup,
+  protocolsLookup,
 }: Pick<
   ContentProps,
   | "pageIndex"
@@ -304,14 +367,20 @@ const DataBlock = ({
   | "isFetchingPools"
   | "poolsResult"
   | "onSortChanged"
+  | "chainsLookup"
+  | "protocolsLookup"
 >) => {
   const rows = useMemo(() => {
     return (poolsResult?.data || []).map((pool) => ({
       id: `${pool.protocolId}/${pool.chainId}/${pool.name}`,
-      pool: pool.name,
+      pool: {
+        pool,
+        chain: chainsLookup[pool.chainId],
+        protocol: protocolsLookup[pool.protocolId],
+      },
       tvl: pool.tvl,
       apr: `${(Number(pool.apr) * 100).toFixed(2)}%`,
-      link: pool.protocolId, // todo
+      link: protocolsLookup[pool.protocolId],
     }));
   }, [poolsResult]);
 
@@ -323,6 +392,8 @@ const DataBlock = ({
       disableColumnSelector
       disableDensitySelector
       disableSelectionOnClick
+      density={"comfortable"}
+      rowHeight={80}
       showCellRightBorder={false}
       showColumnRightBorder={false}
       components={{
