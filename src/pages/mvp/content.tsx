@@ -233,14 +233,10 @@ const renderPoolCell: GridColDef["renderCell"] = (params) => {
 
   return (
     <Stack>
-      <Typography fontSize={16} fontWeight={"bold"}>
-        {pool?.name || "---"}
-      </Typography>
+      <Typography fontSize={16}>{pool?.name || "---"}</Typography>
       <Box marginTop={"3px"} />
       <Stack direction={"row"} alignItems={"center"}>
-        <Typography fontSize={14} fontWeight={"bold"}>
-          {protocol?.name || "---"}
-        </Typography>
+        <Typography fontSize={14}>{protocol?.name || "---"}</Typography>
         <Box marginLeft={1} />
         {chain?.icon && (
           <img
@@ -279,9 +275,15 @@ const DATA_COLUMNS: GridColDef[] = [
   {
     field: "pool",
     headerName: "POOL",
-    flex: 3,
+    flex: 4,
     sortable: false,
     renderCell: renderPoolCell,
+  },
+  {
+    field: "invest_token",
+    headerName: "Invest Token",
+    flex: 4,
+    sortable: false,
   },
   {
     field: "tvl",
@@ -379,6 +381,10 @@ const DataBlock = ({
         chain: chainsLookup[pool.chainId],
         protocol: protocolsLookup[pool.protocolId],
       },
+      invest_token:
+        (pool.depositCoins || [])
+          .map((i) => (typeof i === "string" && i ? i : "Unknown"))
+          .join(", ") || "Unknown",
       tvl: pool.tvl,
       apy: `${(Number(pool.apy) * 100).toFixed(2)}%`,
       link: protocolsLookup[pool.protocolId],

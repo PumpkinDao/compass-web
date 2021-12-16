@@ -32,6 +32,7 @@ export type Pool = {
   address: string;
   apy: number;
   tvl: number;
+  depositCoins: string[];
   createdAt: number;
 };
 
