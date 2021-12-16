@@ -25,21 +25,26 @@ const Header = ({
       >
         <Toolbar>
           <ExploreOutlinedIcon sx={{ fontSize: 50 }} />
-          <Box marginLeft={16} />
-          {Array.isArray(tabs) && tabs.length > 1 ? (
-            <Tabs
-              variant={"fullWidth"}
-              value={selectedChainId ? selectedChainId : "all"}
-              onChange={(_, tabId) =>
-                onChainChanged(tabId === "all" ? "" : tabId)
-              }
-            >
-              {tabs.map((i) => (
-                <Tab key={i.id} label={i.name} value={i.id} />
-              ))}
-            </Tabs>
-          ) : null}
-          <Box flexGrow={1} />
+          <Box
+            flexGrow={1}
+            display={"flex"}
+            justifyContent={"center"}
+            alignItems={"center"}
+            sx={{ marginLeft: 16, marginRight: 16 }}
+          >
+            {Array.isArray(tabs) && tabs.length > 1 ? (
+              <Tabs
+                value={selectedChainId ? selectedChainId : "all"}
+                onChange={(_, tabId) =>
+                  onChainChanged(tabId === "all" ? "" : tabId)
+                }
+              >
+                {tabs.map((i) => (
+                  <Tab key={i.id} label={i.name} value={i.id} />
+                ))}
+              </Tabs>
+            ) : null}
+          </Box>
           <SearchInput
             placeholder={"Search Protocols"}
             onSearchSubmit={onSearchSubmit}
