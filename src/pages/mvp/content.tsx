@@ -155,7 +155,8 @@ const DetailFilterGroup = ({
 
   const searchProtocolIdsByTag = useMemo(() => {
     return protocols.reduce<Record<string, Set<string>>>((acc, cur) => {
-      cur.tags?.forEach((tag) => {
+      cur.tags?.forEach((tag: string) => {
+        tag = tag.toLowerCase();
         if (!acc[tag]) {
           acc[tag] = new Set();
         }
