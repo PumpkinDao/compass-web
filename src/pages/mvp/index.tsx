@@ -8,7 +8,7 @@ import { PoolsArg } from "../../redux/pumpkin-api/types";
 const INIT_POOLS_ARG: PoolsArg = {
   pageIndex: 0,
   pageSize: 15,
-  aprAsc: false,
+  apyAsc: false,
 };
 
 const useBusiness = () => {
@@ -115,15 +115,15 @@ const useBusiness = () => {
 
   const onSortChanged = useCallback(
     (sortType: string, val: string) => {
-      let aprAsc: boolean | undefined = undefined;
+      let apyAsc: boolean | undefined = undefined;
       let tvlAsc: boolean | undefined = undefined;
 
-      if (sortType === "apr") {
-        aprAsc = val === "asc";
+      if (sortType === "apy") {
+        apyAsc = val === "asc";
       } else if (sortType === "tvl") {
         tvlAsc = val === "asc";
       }
-      updatePoolsArg({ aprAsc: aprAsc, tvlAsc });
+      updatePoolsArg({ apyAsc: apyAsc, tvlAsc });
     },
     [updatePoolsArg]
   );
