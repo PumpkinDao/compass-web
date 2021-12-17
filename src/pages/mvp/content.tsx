@@ -270,6 +270,15 @@ const renderLinkCell: GridColDef["renderCell"] = (params) => {
   );
 };
 
+const renderTVLCell: GridColDef["renderCell"] = (params) => {
+  const value = params.value || 0;
+  const tvl =
+    typeof value === "number" && Number.isFinite(value) && value >= 0
+      ? value
+      : 0;
+  return <Typography variant={"inherit"}>${tvl.toLocaleString()}</Typography>;
+};
+
 const DATA_COLUMNS: GridColDef[] = [
   { field: "id", hide: true },
   {
@@ -290,6 +299,7 @@ const DATA_COLUMNS: GridColDef[] = [
     headerName: "TVL",
     flex: 2,
     type: "number",
+    renderCell: renderTVLCell,
   },
   {
     field: "apy",
