@@ -177,11 +177,13 @@ const DetailFilterGroup = ({
 
   return (
     <Stack direction={"row"} spacing={2}>
-      <DetailFilter
-        label={"Token"}
-        items={tokens}
-        onItemSelected={(id) => onFilterChanged("token", id)}
-      />
+      <Box display={"none"}>
+        <DetailFilter
+          label={"Token"}
+          items={tokens}
+          onItemSelected={(id) => onFilterChanged("token", id)}
+        />
+      </Box>
       <DetailFilter
         label={"Category"}
         items={tags}
