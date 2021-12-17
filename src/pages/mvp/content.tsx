@@ -234,7 +234,7 @@ const renderPoolCell: GridColDef["renderCell"] = (params) => {
     params.value || {};
 
   return (
-    <Stack>
+    <Stack aria-label={`pool-updated-at-${pool.createdAt}`}>
       <Typography fontSize={16}>{pool?.name || "---"}</Typography>
       <Box marginTop={"3px"} />
       <Stack direction={"row"} alignItems={"center"}>

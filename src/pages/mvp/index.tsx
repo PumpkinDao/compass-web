@@ -205,7 +205,7 @@ const MVP = () => {
         onChainChanged={onChainChanged}
         onSearchSubmit={onSearchSubmit}
       />
-      <Box marginTop={16} />
+      <Box marginTop={20} />
       <Content
         chainsLookup={chainsLookup}
         protocolsLookup={protocolsLookup}
@@ -222,6 +222,7 @@ const MVP = () => {
         onPageIndexChange={onPageIndexChanged}
         onPageSizeChanged={onPageSizeChanged}
       />
+      <Box marginBottom={16} />
     </>
   );
 };
