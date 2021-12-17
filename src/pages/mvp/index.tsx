@@ -108,6 +108,10 @@ const useBusiness = () => {
         updatePoolsArg({ protocolId: protocolIds });
       } else if (filterType === "protocol") {
         updatePoolsArg({ protocolId: val });
+      } else if (filterType === "investTokenType") {
+        updatePoolsArg({
+          investTokenType: val as "single" | "multi" | undefined,
+        });
       }
     },
     [updatePoolsArg, searchProtocolsByTag]

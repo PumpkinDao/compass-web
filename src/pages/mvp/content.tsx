@@ -82,7 +82,7 @@ const PoolFilterGroup = ({
   const onChange = useCallback(
     (id: string) => {
       setSelectedId(id);
-      onFilterChanged("singleTokenPool", String(id === "single"));
+      onFilterChanged("investTokenType", id === "all" ? "" : id);
     },
     [setSelectedId]
   );

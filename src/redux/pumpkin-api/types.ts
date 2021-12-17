@@ -22,6 +22,7 @@ export type PoolsArg =
       pageSize?: number;
       apyAsc?: boolean;
       tvlAsc?: boolean;
+      investTokenType?: "single" | "multi";
     }
   | undefined;
 
