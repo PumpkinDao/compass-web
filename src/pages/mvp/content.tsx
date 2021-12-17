@@ -382,9 +382,9 @@ const DataBlock = ({
         protocol: protocolsLookup[pool.protocolId],
       },
       invest_token:
-        (pool.depositCoins || [])
-          .map((i) => (typeof i === "string" && i ? i : "Unknown"))
-          .join(", ") || "Unknown",
+        pool.investTokens
+          ?.map((i) => (typeof i === "string" && i ? i : "UNKNOWN"))
+          .join(", ") || "UNKNOWN",
       tvl: pool.tvl,
       apy: `${(Number(pool.apy) * 100).toFixed(2)}%`,
       link: protocolsLookup[pool.protocolId],
