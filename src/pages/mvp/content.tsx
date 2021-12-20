@@ -271,16 +271,18 @@ const renderPoolCell: GridColDef["renderCell"] = (params) => {
 
 const renderInvestToken: GridColDef["renderCell"] = (params) => {
   const tokens: Token[] = params.value || [];
+  const lastTokenIndex = tokens.length - 1;
 
   return (
     <Stack direction={"row"}>
       {tokens &&
-        tokens.map(({ address, symbol }) => (
+        tokens.map(({ address, symbol }, index) => (
           <Tooltip key={address} title={<TapToCopy content={address} />}>
             <Typography color={"inherit"}>
               {symbol
                 ? symbol
                 : `${address.slice(0, 4)}...${address.slice(-4)}`}
+              {index < lastTokenIndex && ", "}
             </Typography>
           </Tooltip>
         ))}
