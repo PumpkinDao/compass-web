@@ -26,6 +26,12 @@ export type PoolsArg =
     }
   | undefined;
 
+export type Token = {
+  name: string;
+  symbol: string;
+  address: string;
+};
+
 export type Pool = {
   protocolId: string;
   chainId: string;
@@ -33,7 +39,7 @@ export type Pool = {
   address: string;
   apy: number;
   tvl: number;
-  investTokens: string[];
+  investTokens: Token[];
   createdAt: number;
 };
 
