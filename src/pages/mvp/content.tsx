@@ -11,11 +11,18 @@ import {
   styled,
   ToggleButton,
   ToggleButtonGroup,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { useCallback, useMemo, useState } from "react";
 import { DataGrid, GridColDef, GridOverlay } from "@mui/x-data-grid";
-import { Pool, PoolsResult, SingleMatrix } from "../../redux/pumpkin-api/types";
+import {
+  Pool,
+  PoolsResult,
+  SingleMatrix,
+  Token,
+} from "../../redux/pumpkin-api/types";
+import TapToCopy from "../../components/tap-to-copy";
 
 type ContentProps = {
   chainsLookup: Record<string, SingleMatrix>;
@@ -262,6 +269,25 @@ const renderPoolCell: GridColDef["renderCell"] = (params) => {
   );
 };
 
+const renderInvestToken: GridColDef["renderCell"] = (params) => {
+  const tokens: Token[] = params.value || [];
+
+  return (
+    <Stack direction={"row"}>
+      {tokens &&
+        tokens.map(({ address, symbol }) => (
+          <Tooltip key={address} title={<TapToCopy content={address} />}>
+            <Typography color={"inherit"}>
+              {symbol
+                ? symbol
+                : `${address.slice(0, 4)}...${address.slice(-4)}`}
+            </Typography>
+          </Tooltip>
+        ))}
+    </Stack>
+  );
+};
+
 const renderLinkCell: GridColDef["renderCell"] = (params) => {
   const { link, name } = params.value || { link: "#", name: "---" };
 
@@ -295,6 +321,7 @@ const DATA_COLUMNS: GridColDef[] = [
     headerName: "Invest Token",
     flex: 4,
     sortable: false,
+    renderCell: renderInvestToken,
   },
   {
     field: "tvl",
@@ -393,10 +420,7 @@ const DataBlock = ({
         chain: chainsLookup[pool.chainId],
         protocol: protocolsLookup[pool.protocolId],
       },
-      invest_token:
-        pool.investTokens
-          ?.map((i) => (typeof i === "string" && i ? i : "UNKNOWN"))
-          .join(", ") || "UNKNOWN",
+      invest_token: pool.investTokens,
       tvl: pool.tvl,
       apy: `${(Number(pool.apy) * 100).toFixed(2)}%`,
       link: protocolsLookup[pool.protocolId],
