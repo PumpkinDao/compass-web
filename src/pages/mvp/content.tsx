@@ -307,9 +307,7 @@ const renderTVLCell: GridColDef["renderCell"] = (params) => {
       ? value
       : 0;
   return (
-    <Typography variant={"inherit"}>
-      ${tvl.toFixed(0).toLocaleString()}
-    </Typography>
+    <Typography variant={"inherit"}>${(tvl | 0).toLocaleString()}</Typography>
   );
 };
 
