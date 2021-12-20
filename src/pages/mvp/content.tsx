@@ -304,7 +304,11 @@ const renderTVLCell: GridColDef["renderCell"] = (params) => {
     typeof value === "number" && Number.isFinite(value) && value >= 0
       ? value
       : 0;
-  return <Typography variant={"inherit"}>${tvl.toLocaleString()}</Typography>;
+  return (
+    <Typography variant={"inherit"}>
+      ${tvl.toFixed(0).toLocaleString()}
+    </Typography>
+  );
 };
 
 const DATA_COLUMNS: GridColDef[] = [
