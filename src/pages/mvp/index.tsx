@@ -1,9 +1,10 @@
-import { Box } from "@mui/material";
+import { Box, Container } from "@mui/material";
 import Header from "./header";
-import Content from "./content";
+import DataBlock from "./data-block";
 import { useLazyPoolsQuery, useMatrixQuery } from "../../redux/pumpkin-api";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { PoolsArg } from "../../redux/pumpkin-api/types";
+import Filters from "./filters";
 
 const INIT_POOLS_ARG: PoolsArg = {
   pageIndex: 0,
@@ -206,22 +207,26 @@ const MVP = () => {
         onSearchSubmit={onSearchSubmit}
       />
       <Box marginTop={20} />
-      <Content
-        chainsLookup={chainsLookup}
-        protocolsLookup={protocolsLookup}
-        selectedChainId={selectedChainId}
-        tokens={tokens}
-        tags={tags}
-        protocols={protocols}
-        isFetchingPools={isFetchingPools}
-        poolsResult={poolsResult}
-        onFilterChanged={onFilterChanged}
-        onSortChanged={onSortChanged}
-        pageIndex={pageIndex}
-        pageSize={pageSize}
-        onPageIndexChange={onPageIndexChanged}
-        onPageSizeChanged={onPageSizeChanged}
-      />
+      <Container maxWidth={"lg"}>
+        <Filters
+          tokens={tokens}
+          tags={tags}
+          protocols={protocols}
+          onFilterChanged={onFilterChanged}
+        />
+        <Box marginTop={8} />
+        <DataBlock
+          chainsLookup={chainsLookup}
+          protocolsLookup={protocolsLookup}
+          isFetchingPools={isFetchingPools}
+          poolsResult={poolsResult}
+          onSortChanged={onSortChanged}
+          pageIndex={pageIndex}
+          pageSize={pageSize}
+          onPageIndexChange={onPageIndexChanged}
+          onPageSizeChanged={onPageSizeChanged}
+        />
+      </Container>
       <Box marginBottom={16} />
     </>
   );
