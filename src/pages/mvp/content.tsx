@@ -82,6 +82,12 @@ const Content = ({
   );
 };
 
+const StyledToggleButtonGroup = styled(ToggleButtonGroup)(() => ({
+  "& .MuiToggleButton-root": {
+    textTransform: "revert",
+  },
+}));
+
 const PoolFilterGroup = ({
   onFilterChanged,
 }: Pick<ContentProps, "onFilterChanged">) => {
@@ -95,7 +101,7 @@ const PoolFilterGroup = ({
   );
 
   return (
-    <ToggleButtonGroup
+    <StyledToggleButtonGroup
       exclusive
       value={selectedId}
       onChange={(_, newVal) => onChange(newVal)}
@@ -103,7 +109,7 @@ const PoolFilterGroup = ({
       <ToggleButton value={"all"}>All</ToggleButton>
       <ToggleButton value={"single"}>Single Token</ToggleButton>
       <ToggleButton value={"multi"}>Multi Token</ToggleButton>
-    </ToggleButtonGroup>
+    </StyledToggleButtonGroup>
   );
 };
 
@@ -315,7 +321,7 @@ const DATA_COLUMNS: GridColDef[] = [
   { field: "id", hide: true },
   {
     field: "pool",
-    headerName: "POOL",
+    headerName: "Pool",
     flex: 4,
     sortable: false,
     renderCell: renderPoolCell,
@@ -344,7 +350,7 @@ const DATA_COLUMNS: GridColDef[] = [
   },
   {
     field: "link",
-    headerName: "LINK",
+    headerName: "Links",
     flex: 3,
     sortable: false,
     headerAlign: "right",
