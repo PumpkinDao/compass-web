@@ -5,6 +5,7 @@ import { useLazyPoolsQuery, useMatrixQuery } from "../../redux/pumpkin-api";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { PoolsArg } from "../../redux/pumpkin-api/types";
 import Filters from "./filters";
+import Footer from "./footer";
 
 const INIT_POOLS_ARG: PoolsArg = {
   pageIndex: 0,
@@ -226,8 +227,9 @@ const MVP = () => {
           onPageIndexChange={onPageIndexChanged}
           onPageSizeChanged={onPageSizeChanged}
         />
+        <Box marginBottom={16} />
+        <Footer />
       </Container>
-      <Box marginBottom={16} />
     </>
   );
 };
