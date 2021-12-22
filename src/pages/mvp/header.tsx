@@ -1,7 +1,7 @@
 import { AppBar, Box, styled, Tab, Tabs, Toolbar } from "@mui/material";
 import SearchInput from "../../components/search-input";
 import ExploreOutlinedIcon from "@mui/icons-material/ExploreOutlined";
-import { SingleMatrix } from "../../redux/pumpkin-api/types";
+import { SingleMatrix } from "../../redux/compass-api/types";
 
 const StyledTabs = styled(Tabs)(() => ({
   "& .MuiTab-root": {

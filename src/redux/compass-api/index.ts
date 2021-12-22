@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { MatrixResult, PoolsArg, PoolsResult } from "./types";
 
-export const NAMESPACE = "pumpkinApi";
+export const NAMESPACE = "compassApi";
 
 const transformResponse = <T>(response: { result: T }) => response.result;
 

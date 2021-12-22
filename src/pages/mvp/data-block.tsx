@@ -14,7 +14,7 @@ import {
   PoolsResult,
   SingleMatrix,
   Token,
-} from "../../redux/pumpkin-api/types";
+} from "../../redux/compass-api/types";
 import TapToCopy from "../../components/tap-to-copy";
 
 type DataProps = {

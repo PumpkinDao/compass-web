@@ -1,9 +1,9 @@
 import { Box, Container } from "@mui/material";
 import Header from "./header";
 import DataBlock from "./data-block";
-import { useLazyPoolsQuery, useMatrixQuery } from "../../redux/pumpkin-api";
+import { useLazyPoolsQuery, useMatrixQuery } from "../../redux/compass-api";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { PoolsArg } from "../../redux/pumpkin-api/types";
+import { PoolsArg } from "../../redux/compass-api/types";
 import Filters from "./filters";
 import Footer from "./footer";
 

@@ -1,16 +1,16 @@
 import { Action, configureStore, ThunkAction } from "@reduxjs/toolkit";
-import * as pumpkinApi from "./pumpkin-api";
+import * as compassApi from "./compass-api";
 import * as messageBarSlice from "../features/message-bar/slice";
 import { setupListeners } from "@reduxjs/toolkit/query";
 
 export const store = configureStore({
   reducer: {
-    [pumpkinApi.NAMESPACE]: pumpkinApi.reducer,
+    [compassApi.NAMESPACE]: compassApi.reducer,
     [messageBarSlice.NAMESPACE]: messageBarSlice.reducer,
   },
   middleware: (getDefaultMiddleware) => [
     ...getDefaultMiddleware(),
-    pumpkinApi.middleware,
+    compassApi.middleware,
   ],
 });
 

@@ -1,5 +1,6 @@
 {
   "name": "compass-web",
+  "author": "CompassDAO",
   "version": "0.4.4",
   "private": true,
   "dependencies": {

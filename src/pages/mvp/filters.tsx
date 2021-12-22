@@ -10,7 +10,7 @@ import {
   ToggleButtonGroup,
 } from "@mui/material";
 import { useCallback, useMemo, useState } from "react";
-import { SingleMatrix } from "../../redux/pumpkin-api/types";
+import { SingleMatrix } from "../../redux/compass-api/types";
 
 type FilterProps = {
   tokens: Array<SingleMatrix>;
