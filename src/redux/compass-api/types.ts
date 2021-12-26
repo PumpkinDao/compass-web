@@ -11,11 +11,13 @@ export type MatrixResult = {
   chains: SingleMatrix[];
   tags: SingleMatrix[];
   protocols: SingleMatrix[];
+  investTokens: SingleMatrix[];
 };
 
 export type PoolsArg =
   | {
       protocolId?: string | string[];
+      investToken?: string;
       chainId?: string;
       address?: string;
       pageIndex?: number;

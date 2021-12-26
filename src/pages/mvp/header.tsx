@@ -1,7 +1,7 @@
 import { AppBar, Box, styled, Tab, Tabs, Toolbar } from "@mui/material";
-import SearchInput from "../../components/search-input";
 import ExploreOutlinedIcon from "@mui/icons-material/ExploreOutlined";
 import { SingleMatrix } from "../../redux/compass-api/types";
+import AutoSearchInput from "../../components/auto-search-input";
 
 const StyledTabs = styled(Tabs)(() => ({
   "& .MuiTab-root": {
@@ -14,11 +14,13 @@ const Header = ({
   chains,
   onChainChanged,
   onSearchSubmit,
+  searchOptions,
 }: {
   selectedChainId: string;
   chains: Array<SingleMatrix>;
   onChainChanged: (id: string) => void;
-  onSearchSubmit: (value: string) => void;
+  onSearchSubmit: (type: string, value: string) => void;
+  searchOptions: Array<{ id: string; label: string; type: string }>;
 }) => {
   const tabs = [{ id: "all", name: "All" }, ...chains];
 
@@ -51,8 +53,9 @@ const Header = ({
               </StyledTabs>
             ) : null}
           </Box>
-          <SearchInput
-            placeholder={"Search Protocols"}
+          <AutoSearchInput
+            placeholder={"Search by protocol, token"}
+            options={searchOptions}
             onSearchSubmit={onSearchSubmit}
           />
           <Box marginRight={8} />

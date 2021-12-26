@@ -15,15 +15,30 @@ const INIT_POOLS_ARG: PoolsArg = {
 
 const useBusiness = () => {
   const { data: matrix } = useMatrixQuery(undefined);
-  const { chains, tags, protocols } = matrix || {};
+  const { chains, tags, protocols, investTokens } = matrix || {};
 
-  const [chainsLookup, protocolsLookup] = useMemo(
-    () => [
-      Object.fromEntries((chains || []).map((i) => [i.id, i])),
-      Object.fromEntries((protocols || []).map((i) => [i.id, i])),
-    ],
-    [chains, protocols]
-  );
+  const [chainsLookup, protocolsLookup, searchOptions] = useMemo(() => {
+    const theChains = chains || [];
+    const theProtocols = protocols || [];
+    const theInvestTokens = investTokens || [];
+
+    return [
+      Object.fromEntries(theChains.map((i) => [i.id, i])),
+      Object.fromEntries(theProtocols.map((i) => [i.id, i])),
+      [
+        ...theProtocols.map((i) => ({
+          type: "Protocol",
+          id: i.id,
+          label: i.name,
+        })),
+        ...theInvestTokens.map((i) => ({
+          type: "Token",
+          id: i.id,
+          label: i.name,
+        })),
+      ],
+    ];
+  }, [chains, protocols, investTokens]);
 
   const [poolsArg, setPoolsArg] = useState<PoolsArg>(INIT_POOLS_ARG);
   const updatePoolsArg = useCallback(
@@ -149,10 +164,10 @@ const useBusiness = () => {
   );
 
   const onSearchSubmit = useCallback(
-    (protocolId: string) => {
-      protocolId = protocolId || "";
-      protocolId = protocolId.toLowerCase();
-      updatePoolsArg({ protocolId });
+    (type: string, input: string) => {
+      const [protocolId, investToken] =
+        type === "Protocol" ? [input.toLowerCase(), ""] : ["", input];
+      updatePoolsArg({ protocolId, investToken });
     },
     [updatePoolsArg]
   );
@@ -160,6 +175,7 @@ const useBusiness = () => {
   return {
     chainsLookup,
     protocolsLookup,
+    searchOptions,
     selectedChainId,
     chains: chains || [],
     tokens: [],
@@ -182,6 +198,7 @@ const MVP = () => {
   const {
     chainsLookup,
     protocolsLookup,
+    searchOptions,
     selectedChainId,
     chains,
     tokens,
@@ -206,6 +223,7 @@ const MVP = () => {
         chains={chains || []}
         onChainChanged={onChainChanged}
         onSearchSubmit={onSearchSubmit}
+        searchOptions={searchOptions}
       />
       <Box marginTop={20} />
       <Container maxWidth={"lg"}>
