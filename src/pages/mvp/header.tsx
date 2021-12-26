@@ -1,7 +1,7 @@
 import { AppBar, Box, styled, Tab, Tabs, Toolbar } from "@mui/material";
-import ExploreOutlinedIcon from "@mui/icons-material/ExploreOutlined";
 import { SingleMatrix } from "../../redux/compass-api/types";
 import AutoSearchInput from "../../components/auto-search-input";
+import { ReactComponent as CompassLogo } from "../../assets/compass-logo.svg";
 
 const StyledTabs = styled(Tabs)(() => ({
   "& .MuiTab-root": {
@@ -32,7 +32,7 @@ const Header = ({
         sx={{ boxShadow: "revert" }}
       >
         <Toolbar>
-          <ExploreOutlinedIcon sx={{ fontSize: 50 }} />
+          <CompassLogo />
           <Box
             flexGrow={1}
             display={"flex"}
