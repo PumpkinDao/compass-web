@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import { useCallback, useState } from "react";
+import { useEffect, useState } from "react";
 
 const Container = styled(Stack)(({ theme }) => ({
   flexDirection: "row",
@@ -42,14 +42,17 @@ const AutoSearchInput = ({
   options: Array<{ id: string; label: string; type: string }>;
 }) => {
   const [input, setInput] = useState<[string, string]>(() => ["", ""]);
-  const submit = useCallback(
-    () => onSearchSubmit(...input),
-    [input, onSearchSubmit]
-  );
+
+  useEffect(() => {
+    const [type, value] = input || [];
+    if ((type && value) || (!type && !value)) {
+      onSearchSubmit(type, value);
+    }
+  }, [input]);
 
   return (
     <Container>
-      <IconButton onClick={submit}>
+      <IconButton>
         <SearchIcon />
       </IconButton>
       <Autocomplete
@@ -62,7 +65,6 @@ const AutoSearchInput = ({
         getOptionLabel={(i) => i.label}
         options={options}
         onChange={(_, v) => setInput([v?.type || "", v?.label || ""])}
-        onKeyPress={(e) => e.key === "Enter" && submit()}
         renderOption={(props, option) => (
           <Box
             {...props}
