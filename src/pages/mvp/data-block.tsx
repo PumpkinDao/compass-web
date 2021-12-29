@@ -99,13 +99,11 @@ const renderLinkCell: GridColDef["renderCell"] = (params) => {
 
 const renderTVLCell: GridColDef["renderCell"] = (params) => {
   const value = params.value || 0;
-  const tvl =
+  const tvl: number =
     typeof value === "number" && Number.isFinite(value) && value >= 0
       ? value
       : 0;
-  return (
-    <Typography variant={"inherit"}>${(tvl | 0).toLocaleString()}</Typography>
-  );
+  return <Typography variant={"inherit"}>${tvl.toLocaleString()}</Typography>;
 };
 
 const DATA_COLUMNS: GridColDef[] = [
