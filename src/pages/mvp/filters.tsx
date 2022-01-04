@@ -1,5 +1,4 @@
 import {
-  Box,
   FormControl,
   InputLabel,
   MenuItem,
@@ -9,17 +8,15 @@ import {
   ToggleButton,
   ToggleButtonGroup,
 } from "@mui/material";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useState } from "react";
 import { SingleMatrix } from "../../redux/compass-api/types";
 
 type FilterProps = {
-  tokens: Array<SingleMatrix>;
   tags: Array<SingleMatrix>;
-  protocols: Array<SingleMatrix>;
   onFilterChanged: (type: string, val: string) => void;
 };
 
-const Filters = ({ tokens, tags, protocols, onFilterChanged }: FilterProps) => {
+const Filters = ({ tags, onFilterChanged }: FilterProps) => {
   return (
     <Stack
       direction={"row"}
@@ -27,12 +24,7 @@ const Filters = ({ tokens, tags, protocols, onFilterChanged }: FilterProps) => {
       justifyContent={"space-between"}
     >
       <PoolFilterGroup onFilterChanged={onFilterChanged} />
-      <DetailFilterGroup
-        tokens={tokens}
-        tags={tags}
-        protocols={protocols}
-        onFilterChanged={onFilterChanged}
-      />
+      <DetailFilterGroup tags={tags} onFilterChanged={onFilterChanged} />
     </Stack>
   );
 };
@@ -113,58 +105,15 @@ const DetailFilter = ({
   );
 };
 
-const DetailFilterGroup = ({
-  tokens,
-  tags,
-  protocols,
-  onFilterChanged,
-}: FilterProps) => {
-  const [tag, setTag] = useState<string>("");
-
-  const searchProtocolIdsByTag = useMemo(() => {
-    return protocols.reduce<Record<string, Set<string>>>((acc, cur) => {
-      cur.tags?.forEach((tag: string) => {
-        tag = tag.toLowerCase();
-        if (!acc[tag]) {
-          acc[tag] = new Set();
-        }
-        acc[tag].add(cur.id);
-      });
-      return acc;
-    }, {});
-  }, [protocols]);
-
-  const subProtocols = useMemo(() => {
-    if (tag && protocols) {
-      const protocolIds = searchProtocolIdsByTag[tag];
-      return protocols.filter((i) => protocolIds.has(i.id));
-    } else {
-      return protocols;
-    }
-  }, [tag, searchProtocolIdsByTag, protocols]);
-
+const DetailFilterGroup = ({ tags, onFilterChanged }: FilterProps) => {
   return (
     <Stack direction={"row"} spacing={2}>
-      <Box display={"none"}>
-        <DetailFilter
-          label={"Token"}
-          items={tokens}
-          onItemSelected={(id) => onFilterChanged("token", id)}
-        />
-      </Box>
       <DetailFilter
         label={"Category"}
         items={tags}
         onItemSelected={(id) => {
-          setTag(id);
           onFilterChanged("tag", id);
         }}
-      />
-      <DetailFilter
-        key={`Protocols<${tag}>`}
-        label={"Protocol"}
-        items={subProtocols}
-        onItemSelected={(id) => onFilterChanged("protocol", id)}
       />
     </Stack>
   );

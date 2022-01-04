@@ -86,7 +86,7 @@ const useBusiness = () => {
     }, {});
   }, [protocols]);
 
-  const [chainProtocols, chainTags, searchProtocolsByTag] = useMemo(() => {
+  const [chainTags, searchProtocolsByTag] = useMemo(() => {
     let subProtocols = protocols || [];
 
     if (selectedChainId) {
@@ -115,7 +115,7 @@ const useBusiness = () => {
     const tagSet = new Set(Object.keys(lookup));
     const subTags = (tags || []).filter((i) => tagSet.has(i.id));
 
-    return [subProtocols, subTags, lookup];
+    return [subTags, lookup];
   }, [selectedChainId, searchProtocolsByChain, protocols, tags]);
 
   const onFilterChanged = useCallback(
@@ -176,17 +176,7 @@ const useBusiness = () => {
         },
         [[], []]
       );
-      console.log(
-        "values: ",
-        values,
-        ", protocolIds",
-        protocolIds,
-        ", investTokens: ",
-        investTokens
-      );
 
-      // const [protocolId, investToken] =
-      //   type === "Protocol" ? [input.toLowerCase(), ""] : ["", input];
       updatePoolsArg({
         protocolId: protocolIds,
         investTokens: investTokens,
@@ -201,9 +191,7 @@ const useBusiness = () => {
     searchOptions,
     selectedChainId,
     chains: chains || [],
-    tokens: [],
     tags: chainTags,
-    protocols: chainProtocols,
     isFetchingPools,
     poolsResult,
     onChainChanged,
@@ -224,9 +212,7 @@ const MVP = () => {
     searchOptions,
     selectedChainId,
     chains,
-    tokens,
     tags,
-    protocols,
     isFetchingPools,
     poolsResult,
     onChainChanged,
@@ -250,12 +236,7 @@ const MVP = () => {
       />
       <Box marginTop={20} />
       <Container maxWidth={"lg"}>
-        <Filters
-          tokens={tokens}
-          tags={tags}
-          protocols={protocols}
-          onFilterChanged={onFilterChanged}
-        />
+        <Filters tags={tags} onFilterChanged={onFilterChanged} />
         <Box marginTop={8} />
         <DataBlock
           chainsLookup={chainsLookup}
