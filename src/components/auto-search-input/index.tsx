@@ -17,19 +17,10 @@ const Container = styled(Stack)(({ theme }) => ({
   alignItems: "center",
   borderRadius: 10,
   paddingRight: "16px",
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  "&:hover": {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
+  backgroundColor: alpha(theme.palette.common.white, 0.25),
   [theme.breakpoints.up("sm")]: {
     marginLeft: theme.spacing(1),
     width: "auto",
-  },
-  "& .MuiButtonBase-root": {
-    opacity: 0.5,
-  },
-  "&:hover .MuiButtonBase-root, &.Mui-focused .MuiButtonBase-root": {
-    opacity: 1,
   },
 }));
 
