@@ -29,6 +29,11 @@ const index = createApi({
               protocolId: args.protocolId.join(","),
             }));
 
+          Array.isArray(args.investTokens) &&
+            (args = Object.assign({}, args, {
+              investTokens: args.investTokens.join(","),
+            }));
+
           const params = new URLSearchParams(args as never);
           uri += "?" + params.toString();
         }

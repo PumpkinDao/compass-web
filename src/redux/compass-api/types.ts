@@ -17,7 +17,7 @@ export type MatrixResult = {
 export type PoolsArg =
   | {
       protocolId?: string | string[];
-      investToken?: string;
+      investTokens?: string[];
       chainId?: string;
       address?: string;
       pageIndex?: number;

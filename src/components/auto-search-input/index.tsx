@@ -2,6 +2,7 @@ import {
   alpha,
   Autocomplete,
   Box,
+  Chip,
   IconButton,
   Stack,
   styled,
@@ -38,17 +39,16 @@ const AutoSearchInput = ({
   options,
 }: {
   placeholder: string;
-  onSearchSubmit: (type: string, value: string) => void;
+  onSearchSubmit: (values: Array<{ type: string; label: string }>) => void;
   options: Array<{ id: string; label: string; type: string }>;
 }) => {
-  const [input, setInput] = useState<[string, string]>(() => ["", ""]);
+  const [values, setValues] = useState<Array<{ type: string; label: string }>>(
+    []
+  );
 
   useEffect(() => {
-    const [type, value] = input || [];
-    if ((type && value) || (!type && !value)) {
-      onSearchSubmit(type, value);
-    }
-  }, [input]);
+    onSearchSubmit(values);
+  }, [values]);
 
   return (
     <Container>
@@ -56,15 +56,40 @@ const AutoSearchInput = ({
         <SearchIcon />
       </IconButton>
       <Autocomplete
+        multiple
         autoHighlight
         autoComplete
         sx={{
-          width: "25ch",
+          width: "30ch",
           "& .MuiAutocomplete-popupIndicator": { display: "none" },
         }}
+        size={"small"}
         getOptionLabel={(i) => i.label}
         options={options}
-        onChange={(_, v) => setInput([v?.type || "", v?.label || ""])}
+        onChange={(_, v) => setValues(v)}
+        renderTags={(value, getTagProps) => (
+          <Stack
+            direction={"row"}
+            overflow={"auto"}
+            sx={{
+              "&::-webkit-scrollbar": {
+                display: "none",
+              },
+            }}
+          >
+            {value
+              .map((option, index) => (
+                // eslint-disable-next-line react/jsx-key
+                <Chip
+                  color={option.type === "Protocol" ? "primary" : "default"}
+                  label={option.label}
+                  size="small"
+                  {...getTagProps({ index })}
+                />
+              ))
+              .reverse()}
+          </Stack>
+        )}
         renderOption={(props, option) => (
           <Box
             {...props}
@@ -73,6 +98,7 @@ const AutoSearchInput = ({
             sx={{
               marginLeft: "10px",
               marginRight: "10px",
+              marginBottom: "10px",
               borderRadius: "10px",
             }}
           >

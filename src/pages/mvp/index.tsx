@@ -164,10 +164,33 @@ const useBusiness = () => {
   );
 
   const onSearchSubmit = useCallback(
-    (type: string, input: string) => {
-      const [protocolId, investToken] =
-        type === "Protocol" ? [input.toLowerCase(), ""] : ["", input];
-      updatePoolsArg({ protocolId, investToken });
+    (values: Array<{ type: string; label: string }>) => {
+      const [protocolIds, investTokens] = values.reduce<[string[], string[]]>(
+        (acc, cur) => {
+          if (cur.type === "Protocol") {
+            acc[0].push(cur.label.toLowerCase());
+          } else if (cur.type === "Token") {
+            acc[1].push(cur.label);
+          }
+          return acc;
+        },
+        [[], []]
+      );
+      console.log(
+        "values: ",
+        values,
+        ", protocolIds",
+        protocolIds,
+        ", investTokens: ",
+        investTokens
+      );
+
+      // const [protocolId, investToken] =
+      //   type === "Protocol" ? [input.toLowerCase(), ""] : ["", input];
+      updatePoolsArg({
+        protocolId: protocolIds,
+        investTokens: investTokens,
+      });
     },
     [updatePoolsArg]
   );

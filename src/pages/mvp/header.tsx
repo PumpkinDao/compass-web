@@ -19,7 +19,7 @@ const Header = ({
   selectedChainId: string;
   chains: Array<SingleMatrix>;
   onChainChanged: (id: string) => void;
-  onSearchSubmit: (type: string, value: string) => void;
+  onSearchSubmit: (values: Array<{ type: string; label: string }>) => void;
   searchOptions: Array<{ id: string; label: string; type: string }>;
 }) => {
   const tabs = [{ id: "all", name: "All" }, ...chains];
