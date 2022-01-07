@@ -1,7 +1,7 @@
 {
   "name": "compass-web",
   "author": "CompassDAO",
-  "version": "0.5.6",
+  "version": "0.5.7",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.6.0",
