@@ -3,6 +3,7 @@ import { Copyright } from "@mui/icons-material";
 import { ReactComponent as DiscordIcon } from "../../assets/discord.svg";
 import { ReactComponent as GithubIcon } from "../../assets/github.svg";
 import { ReactComponent as TwitterIcon } from "../../assets/twitter.svg";
+import { ReactComponent as DocIcon } from "../../assets/doc.svg";
 import React from "react";
 
 const StyledContainer = styled(Stack)(() => ({
@@ -36,14 +37,16 @@ const Footer = () => (
       <Stack direction={"row"} alignItems={"center"}>
         <Copyright className={"smallFont"} />
         <Box marginRight={1} />
-        <Typography className={"smallFont"}>2021 CompassDAO</Typography>
+        <Typography className={"smallFont"}>2022 CompassDAO</Typography>
       </Stack>
       <Stack direction={"row"} alignItems={"center"}>
+        <SocialIcon link={"https://docs.compassdao.io/"} svg={DocIcon} />
+        <Box marginRight={2} />
         <SocialIcon link={"https://github.com/compassdao"} svg={GithubIcon} />
         <Box marginRight={2} />
         <SocialIcon link={"https://twitter.com/compassdao"} svg={TwitterIcon} />
         <Box marginRight={2} />
-        <SocialIcon link={"https://discord.gg/bG89QDHyVZ"} svg={DiscordIcon} />
+        <SocialIcon link={"https://discord.gg/FdudwCrp6P"} svg={DiscordIcon} />
       </Stack>
     </Stack>
     <Box marginTop={6} />
