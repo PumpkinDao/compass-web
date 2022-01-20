@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.js": "/static/js/main.4c9309dd.chunk.js",
-    "main.js.map": "/static/js/main.4c9309dd.chunk.js.map",
+    "main.js": "/static/js/main.e52d162b.chunk.js",
+    "main.js.map": "/static/js/main.e52d162b.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.34dbefca.js",
     "runtime-main.js.map": "/static/js/runtime-main.34dbefca.js.map",
     "static/js/2.89614a53.chunk.js": "/static/js/2.89614a53.chunk.js",
@@ -10,12 +10,13 @@
     "static/js/2.89614a53.chunk.js.LICENSE.txt": "/static/js/2.89614a53.chunk.js.LICENSE.txt",
     "static/media/compass-logo.701bcc66.svg": "/static/media/compass-logo.701bcc66.svg",
     "static/media/discord.442bf193.svg": "/static/media/discord.442bf193.svg",
+    "static/media/doc.9ad44ed0.svg": "/static/media/doc.9ad44ed0.svg",
     "static/media/github.b2f1521e.svg": "/static/media/github.b2f1521e.svg",
     "static/media/twitter.641b8b11.svg": "/static/media/twitter.641b8b11.svg"
   },
   "entrypoints": [
     "static/js/runtime-main.34dbefca.js",
     "static/js/2.89614a53.chunk.js",
-    "static/js/main.4c9309dd.chunk.js"
+    "static/js/main.e52d162b.chunk.js"
   ]
 }
