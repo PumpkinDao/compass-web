@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.js": "/static/js/main.e52d162b.chunk.js",
-    "main.js.map": "/static/js/main.e52d162b.chunk.js.map",
+    "main.js": "/static/js/main.dd94091c.chunk.js",
+    "main.js.map": "/static/js/main.dd94091c.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.34dbefca.js",
     "runtime-main.js.map": "/static/js/runtime-main.34dbefca.js.map",
-    "static/js/2.89614a53.chunk.js": "/static/js/2.89614a53.chunk.js",
-    "static/js/2.89614a53.chunk.js.map": "/static/js/2.89614a53.chunk.js.map",
+    "static/js/2.35392ff4.chunk.js": "/static/js/2.35392ff4.chunk.js",
+    "static/js/2.35392ff4.chunk.js.map": "/static/js/2.35392ff4.chunk.js.map",
     "index.html": "/index.html",
-    "static/js/2.89614a53.chunk.js.LICENSE.txt": "/static/js/2.89614a53.chunk.js.LICENSE.txt",
+    "static/js/2.35392ff4.chunk.js.LICENSE.txt": "/static/js/2.35392ff4.chunk.js.LICENSE.txt",
     "static/media/compass-logo.701bcc66.svg": "/static/media/compass-logo.701bcc66.svg",
     "static/media/discord.442bf193.svg": "/static/media/discord.442bf193.svg",
     "static/media/doc.9ad44ed0.svg": "/static/media/doc.9ad44ed0.svg",
@@ -16,7 +16,7 @@
   },
   "entrypoints": [
     "static/js/runtime-main.34dbefca.js",
-    "static/js/2.89614a53.chunk.js",
-    "static/js/main.e52d162b.chunk.js"
+    "static/js/2.35392ff4.chunk.js",
+    "static/js/main.dd94091c.chunk.js"
   ]
 }
