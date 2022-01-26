@@ -10,7 +10,6 @@ import {
   Typography,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import { useEffect, useState } from "react";
 
 const Container = styled(Stack)(({ theme }) => ({
   flexDirection: "row",
@@ -26,21 +25,17 @@ const Container = styled(Stack)(({ theme }) => ({
 
 const AutoSearchInput = ({
   placeholder,
-  onSearchSubmit,
+  onSearchUpdated,
+  searchValues,
   options,
 }: {
   placeholder: string;
-  onSearchSubmit: (values: Array<{ type: string; label: string }>) => void;
+  onSearchUpdated: (
+    values: Array<{ id: string; label: string; type: string }>
+  ) => void;
+  searchValues: Array<{ id: string; type: string; label: string }>;
   options: Array<{ id: string; label: string; type: string }>;
 }) => {
-  const [values, setValues] = useState<Array<{ type: string; label: string }>>(
-    []
-  );
-
-  useEffect(() => {
-    onSearchSubmit(values);
-  }, [values]);
-
   return (
     <Container>
       <IconButton>
@@ -57,7 +52,8 @@ const AutoSearchInput = ({
         size={"small"}
         getOptionLabel={(i) => i.label}
         options={options}
-        onChange={(_, v) => setValues(v)}
+        onChange={(_, v) => onSearchUpdated(v)}
+        value={searchValues}
         renderTags={(value, getTagProps) => (
           <Stack
             direction={"row"}

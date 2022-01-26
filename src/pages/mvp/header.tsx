@@ -13,13 +13,17 @@ const Header = ({
   selectedChainId,
   chains,
   onChainChanged,
-  onSearchSubmit,
+  onSearchUpdated,
+  searchValues,
   searchOptions,
 }: {
   selectedChainId: string;
   chains: Array<SingleMatrix>;
   onChainChanged: (id: string) => void;
-  onSearchSubmit: (values: Array<{ type: string; label: string }>) => void;
+  onSearchUpdated: (
+    values: Array<{ id: string; label: string; type: string }>
+  ) => void;
+  searchValues: Array<{ id: string; label: string; type: string }>;
   searchOptions: Array<{ id: string; label: string; type: string }>;
 }) => {
   const tabs = [{ id: "all", name: "All" }, ...chains];
@@ -56,7 +60,8 @@ const Header = ({
           <AutoSearchInput
             placeholder={"Search by protocol, token"}
             options={searchOptions}
-            onSearchSubmit={onSearchSubmit}
+            onSearchUpdated={onSearchUpdated}
+            searchValues={searchValues}
           />
           <Box marginRight={8} />
         </Toolbar>

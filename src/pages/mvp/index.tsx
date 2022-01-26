@@ -6,6 +6,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { PoolsArg } from "../../redux/compass-api/types";
 import Filters from "./filters";
 import Footer from "./footer";
+import { useSearchParams } from "react-router-dom";
 
 const INIT_POOLS_ARG: PoolsArg = {
   pageIndex: 0,
@@ -163,27 +164,71 @@ const useBusiness = () => {
     [updatePoolsArg]
   );
 
-  const onSearchSubmit = useCallback(
-    (values: Array<{ type: string; label: string }>) => {
-      const [protocolIds, investTokens] = values.reduce<[string[], string[]]>(
-        (acc, cur) => {
-          if (cur.type === "Protocol") {
-            acc[0].push(cur.label.toLowerCase());
-          } else if (cur.type === "Token") {
-            acc[1].push(cur.label);
-          }
-          return acc;
-        },
-        [[], []]
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchValues, setSearchValues] = useState<
+    Array<{ id: string; type: string; label: string }>
+  >([]);
+
+  const onSearchUpdated = useCallback(
+    (values: Array<{ id: string; type: string; label: string }>) => {
+      console.log("searchValues: ", values);
+      setSearchValues(values);
+      setSearchParams(
+        new URLSearchParams(
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          values.reduce<Record<string, string[]>>((acc, cur) => {
+            const normalType = cur.type.toLowerCase();
+            if (!acc[normalType]) {
+              acc[normalType] = [];
+            }
+
+            acc[normalType].push(cur.label);
+
+            return acc;
+          }, {})
+        )
+      );
+    },
+    [setSearchValues, setSearchParams]
+  );
+
+  useEffect(() => {
+    if (!searchOptions) {
+      return;
+    }
+
+    const protocolIds = searchParams.get("protocol")?.split(",");
+    const investTokens = searchParams.get("token")?.split(",");
+    const values = [];
+    protocolIds &&
+      values.push(
+        ...searchOptions.filter(
+          (i) => i.type === "Protocol" && protocolIds.includes(i.label)
+        )
+      );
+    investTokens &&
+      values.push(
+        ...searchOptions.filter(
+          (i) => i.type === "Token" && investTokens.includes(i.label)
+        )
       );
 
-      updatePoolsArg({
-        protocolId: protocolIds,
-        investTokens: investTokens,
-      });
-    },
-    [updatePoolsArg]
-  );
+    setSearchValues(values as never);
+  }, [searchOptions]);
+
+  useEffect(() => {
+    if (!searchParams || !updatePoolsArg) {
+      return;
+    }
+
+    const protocolIds = searchParams.get("protocol")?.split(",");
+    const investTokens = searchParams.get("token")?.split(",");
+    updatePoolsArg({
+      protocolId: protocolIds && protocolIds.map((i) => i.toLowerCase()),
+      investTokens: investTokens,
+    });
+  }, [searchParams, updatePoolsArg]);
 
   return {
     chainsLookup,
@@ -201,7 +246,8 @@ const useBusiness = () => {
     pageSize: poolsArg?.pageSize || 25,
     onPageSizeChanged,
     onPageIndexChanged,
-    onSearchSubmit,
+    onSearchUpdated,
+    searchValues,
   };
 };
 
@@ -222,7 +268,8 @@ const MVP = () => {
     pageSize,
     onPageSizeChanged,
     onPageIndexChanged,
-    onSearchSubmit,
+    onSearchUpdated,
+    searchValues,
   } = useBusiness();
 
   return (
@@ -231,8 +278,9 @@ const MVP = () => {
         selectedChainId={selectedChainId}
         chains={chains || []}
         onChainChanged={onChainChanged}
-        onSearchSubmit={onSearchSubmit}
+        onSearchUpdated={onSearchUpdated}
         searchOptions={searchOptions}
+        searchValues={searchValues}
       />
       <Box marginTop={20} />
       <Container maxWidth={"lg"}>
