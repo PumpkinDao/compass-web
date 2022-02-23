@@ -5,7 +5,7 @@ export const NAMESPACE = "compassApi";
 
 const transformResponse = <T>(response: { result: T }) => response.result;
 
-const index = createApi({
+const api = createApi({
   reducerPath: NAMESPACE,
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.REACT_APP_COMPASS_API_BASE_URL,
@@ -51,4 +51,4 @@ export const {
   usePingQuery,
   useMatrixQuery,
   useLazyPoolsQuery,
-} = index;
+} = api;
