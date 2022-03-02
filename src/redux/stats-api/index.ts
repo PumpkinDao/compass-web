@@ -17,6 +17,22 @@ export type Script = {
   meta: MetaData;
 };
 
+export type Trigger = {
+  id: number;
+  name: string;
+  scriptId: string;
+  params: string;
+  lastRunTime?: number;
+};
+
+export type TriggerActivity = {
+  id: number;
+  triggerId: number;
+  timeUsed: number;
+  result: string;
+  createdAt: number;
+};
+
 const api = createApi({
   reducerPath: NAMESPACE,
   baseQuery: fetchBaseQuery({
@@ -83,6 +99,37 @@ const api = createApi({
       }),
       transformResponse: transformResponse,
     }),
+    listTriggers: builder.query<Trigger[], string>({
+      query: (owner: string) => ({
+        url: `triggers/${owner}`,
+        method: "GET",
+      }),
+      transformResponse: transformResponse,
+    }),
+    addTrigger: builder.mutation<
+      { triggerId: number },
+      Pick<Trigger, "name" | "scriptId" | "params">
+    >({
+      query: (body) => ({
+        url: "triggers",
+        method: "POST",
+        body: body,
+      }),
+      transformResponse: transformResponse,
+    }),
+    deleteTrigger: builder.mutation<undefined, number>({
+      query: (triggerId) => ({
+        url: `trigger/${triggerId}`,
+        method: "DELETE",
+      }),
+    }),
+    listTriggerActivities: builder.query<TriggerActivity[], number>({
+      query: (triggerId: number) => ({
+        url: `trigger/${triggerId}/activities`,
+        method: "GET",
+      }),
+      transformResponse: transformResponse,
+    }),
   }),
 });
 
@@ -96,4 +143,8 @@ export const {
   useUpdateScriptMutation,
   useLazyGetScriptMetaQuery,
   useRunScriptMutation,
+  useLazyListTriggersQuery,
+  useAddTriggerMutation,
+  useListTriggerActivitiesQuery,
+  useDeleteTriggerMutation,
 } = api;

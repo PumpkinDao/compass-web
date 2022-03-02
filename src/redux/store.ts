@@ -4,6 +4,7 @@ import * as statsApi from "./stats-api";
 import * as messageBarSlice from "../features/message-bar/slice";
 import * as walletSlice from "./wallet";
 import * as editorSlice from "../features/editor/slice";
+import * as triggerSlice from "../features/trigger/slice";
 import { setupListeners } from "@reduxjs/toolkit/query";
 
 export const store = configureStore({
@@ -13,6 +14,7 @@ export const store = configureStore({
     [messageBarSlice.NAMESPACE]: messageBarSlice.reducer,
     [walletSlice.NAMESPACE]: walletSlice.reducer,
     [editorSlice.NAMESPACE]: editorSlice.reducer,
+    [triggerSlice.NAMESPACE]: triggerSlice.reducer,
   },
   middleware: (getDefaultMiddleware) => [
     ...getDefaultMiddleware(),
