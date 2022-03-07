@@ -194,13 +194,20 @@ const TriggerViewer = () => {
         justifyContent: "center",
         alignContent: "center",
         background: "#1e1e1e",
-        padding: "32px",
       }}
     >
       {isCreating ? (
         <TriggerCreating />
       ) : typeof selectedId === "number" ? (
-        <TriggerActivities />
+        <SplitPane
+          allowResize
+          split={"vertical"}
+          minSize={"30%"}
+          defaultSize="70%"
+        >
+          <TriggerActivities />
+          <TriggerDetail />
+        </SplitPane>
       ) : null}
     </Box>
   );
@@ -312,6 +319,53 @@ const TriggerCreating = () => {
   );
 };
 
+const TriggerDetail = () => {
+  const scripts = useAppSelector(editorSelectors.allScripts);
+  const trigger = useAppSelector(triggerSelectors.selectedTrigger);
+  const script = useMemo(() => {
+    return trigger?.scriptId
+      ? scripts.find((i) => i.id === trigger.scriptId)
+      : undefined;
+  }, [trigger?.scriptId, scripts]);
+  const lastRunTime = useMemo(() => {
+    return trigger?.lastRunTime && moment(trigger.lastRunTime).fromNow();
+  }, [trigger?.lastRunTime]);
+
+  return (
+    <Stack direction={"column"}>
+      <Typography
+        sx={{
+          marginTop: "16px",
+          marginLeft: "16px",
+          marginBottom: "16px",
+        }}
+      >
+        {script?.name}
+      </Typography>
+
+      <MonacoEditor
+        value={trigger?.params}
+        height={300}
+        language={"json"}
+        options={{
+          lineNumbers: "off",
+          minimap: { enabled: false },
+        }}
+      />
+      <Typography
+        fontSize={12}
+        sx={{
+          alignSelf: "flex-end",
+          marginTop: "16px",
+          marginRight: "16px",
+        }}
+      >
+        Run At: {lastRunTime}
+      </Typography>
+    </Stack>
+  );
+};
+
 const TriggerActivities = () => {
   const selectedId = useAppSelector(triggerSelectors.selectedTriggerId);
   const { data } = useListTriggerActivitiesQuery(selectedId as number, {
@@ -345,10 +399,12 @@ const TriggerActivities = () => {
   return (
     <Box
       sx={{
-        width: "100%",
-        overflow: "auto",
+        overflowY: "scroll",
+        height: "100%",
         paddingLeft: "10%",
         paddingRight: "10%",
+        paddingTop: "16px",
+        paddingBottom: "16px",
       }}
     >
       {activities.map((i) => (
