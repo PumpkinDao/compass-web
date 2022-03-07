@@ -174,7 +174,7 @@ const DoubleConfirmDelete = ({
           onClick={isDoubleConfirmed ? onConfirmed : confirmFirst}
           disabled={disabled}
         >
-          <DeleteIcon />
+          <DeleteIcon fontSize={"inherit"} />
         </IconButton>
       )}
       timeout={3000}
