@@ -62,13 +62,13 @@ export const useSaveAction = (): [boolean, VoidFunction] => {
 
       const { id, draft } = script;
       if (isLocalScript(id)) {
-        addScript({
+        await addScript({
           owner: wallet,
           code: draft as string,
           localScriptId: id,
         });
       } else {
-        updateScript({ scriptId: id, code: draft as string });
+        await updateScript({ scriptId: id, code: draft as string });
       }
     }, [script, wallet]),
   ];
@@ -87,7 +87,7 @@ export const useRunAction = (): [boolean, VoidFunction] => {
 
       try {
         const params = JSON.parse(script.testParamStr);
-        runScript({ scriptId: script.id, params });
+        await runScript({ scriptId: script.id, params });
       } catch (e) {
         console.error("Invalid params: ", script.testParamStr);
       }

@@ -233,9 +233,13 @@ const MainActionBlock = () => {
       <LoadingButton
         variant={"contained"}
         color={"secondary"}
-        loading={isRunning}
-        disabled={!runBtnEnabled}
-        onClick={runAction}
+        loading={isSaving || isRunning}
+        disabled={!saveBtnEnabled || !runBtnEnabled}
+        onClick={() =>
+          Promise.resolve(hasDraftCode ? saveAction() : undefined).then(
+            runAction
+          )
+        }
       >
         Run
       </LoadingButton>
@@ -306,7 +310,7 @@ const RunBlock = () => {
             })
           )
         }
-        value={script?.testParamStr}
+        value={script?.testParamStr || "{}"}
         height={300}
         language={"json"}
         options={{
