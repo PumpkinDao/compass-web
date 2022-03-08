@@ -19,6 +19,7 @@ export type Script = {
 
 export type Trigger = {
   id: number;
+  owner: string;
   name: string;
   scriptId: string;
   params: string;
@@ -93,7 +94,7 @@ const api = createApi({
     }),
     addTrigger: builder.mutation<
       { triggerId: number },
-      Pick<Trigger, "name" | "scriptId" | "params">
+      Pick<Trigger, "name" | "scriptId" | "params" | "owner">
     >({
       query: (body) => ({
         url: "triggers",

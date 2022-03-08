@@ -215,6 +215,7 @@ const TriggerViewer = () => {
 
 const TriggerCreating = () => {
   const dispatch = useAppDispatch();
+  const wallet = useAppSelector(walletSelectors.connectedAddress);
   const [addTrigger, { isLoading: isAddingTrigger }] = useAddTriggerMutation();
   const [draft, setDraft] = useState<
     Partial<Pick<Trigger, "name" | "scriptId" | "params">>
@@ -309,7 +310,7 @@ const TriggerCreating = () => {
         <LoadingButton
           disabled={!isDraftReady}
           loading={isAddingTrigger}
-          onClick={() => addTrigger(draft as never)}
+          onClick={() => addTrigger({ ...draft, owner: wallet } as never)}
           variant={"contained"}
         >
           Create
