@@ -40,30 +40,21 @@ const api = createApi({
   }),
   endpoints: (builder) => ({
     listScripts: builder.query<Omit<Script, "code">[], string>({
-      query: (owner: string) => ({
-        url: `scripts?owner=${owner}`,
-        method: "GET",
-      }),
+      query: (owner: string) => `scripts?owner=${owner}`,
       transformResponse: transformResponse,
     }),
     getScript: builder.query<Script, string>({
-      query: (scriptId: string) => ({
-        url: `script?scriptId=${scriptId}`,
-        method: "GET",
-      }),
+      query: (scriptId: string) => `scripts/${scriptId}`,
       transformResponse: transformResponse,
     }),
     addScript: builder.mutation<
       { scriptId: string },
       { owner: string; code: string; localScriptId: string }
     >({
-      query: (body) => ({
-        url: "script/add",
+      query: ({ localScriptId: _, ...body }) => ({
+        url: "scripts",
         method: "POST",
-        body: {
-          owner: body.owner,
-          code: body.code,
-        },
+        body,
       }),
       transformResponse: transformResponse,
     }),
@@ -71,18 +62,15 @@ const api = createApi({
       { scriptId: string },
       { scriptId: string; code: string }
     >({
-      query: (body) => ({
-        url: "script",
+      query: ({ scriptId, ...body }) => ({
+        url: `scripts/${scriptId}`,
         method: "POST",
         body: body,
       }),
       transformResponse: transformResponse,
     }),
     getScriptMeta: builder.query<MetaData & { scriptId: string }, string>({
-      query: (scriptId: string) => ({
-        url: `script/meta?scriptId=${scriptId}`,
-        method: "GET",
-      }),
+      query: (scriptId: string) => `scripts/${scriptId}/meta`,
       transformResponse: transformResponse,
     }),
     runScript: builder.mutation<
@@ -92,18 +80,15 @@ const api = createApi({
       },
       { scriptId: string; params: Record<string, unknown> }
     >({
-      query: (body) => ({
-        url: "script/run",
+      query: ({ scriptId, ...body }) => ({
+        url: `scripts/${scriptId}/run`,
         method: "POST",
         body: body,
       }),
       transformResponse: transformResponse,
     }),
     listTriggers: builder.query<Trigger[], string>({
-      query: (owner: string) => ({
-        url: `triggers/${owner}`,
-        method: "GET",
-      }),
+      query: (owner: string) => `triggers?owner=${owner}`,
       transformResponse: transformResponse,
     }),
     addTrigger: builder.mutation<
@@ -119,15 +104,12 @@ const api = createApi({
     }),
     deleteTrigger: builder.mutation<undefined, number>({
       query: (triggerId) => ({
-        url: `trigger/${triggerId}`,
+        url: `triggers/${triggerId}`,
         method: "DELETE",
       }),
     }),
     listTriggerActivities: builder.query<TriggerActivity[], number>({
-      query: (triggerId: number) => ({
-        url: `trigger/${triggerId}/activities`,
-        method: "GET",
-      }),
+      query: (triggerId: number) => `triggers/${triggerId}/activities`,
       transformResponse: transformResponse,
     }),
   }),
