@@ -70,6 +70,12 @@ const api = createApi({
       }),
       transformResponse: transformResponse,
     }),
+    deleteScript: builder.mutation<undefined, string>({
+      query: (scriptId) => ({
+        url: `scripts/${scriptId}`,
+        method: "DELETE",
+      }),
+    }),
     getScriptMeta: builder.query<MetaData & { scriptId: string }, string>({
       query: (scriptId: string) => `scripts/${scriptId}/meta`,
       transformResponse: transformResponse,
@@ -124,6 +130,7 @@ export const {
   useLazyListScriptsQuery,
   useAddScriptMutation,
   useUpdateScriptMutation,
+  useDeleteScriptMutation,
   useLazyGetScriptMetaQuery,
   useRunScriptMutation,
   useLazyListTriggersQuery,

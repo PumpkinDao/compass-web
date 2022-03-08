@@ -39,8 +39,7 @@ import MonacoEditor from "../../components/monaco-editor";
 import LoadingButton from "@mui/lab/LoadingButton";
 
 import moment from "moment";
-import DoubleConfirm from "../../components/double-confirm";
-import DeleteIcon from "@mui/icons-material/Delete";
+import DoubleConfirmDelete from "../../components/double-confirm-delete";
 
 const TriggerTopBar = () => {
   const wallet = useAppSelector(walletSelectors.connectedAddress);
@@ -154,31 +153,6 @@ const TriggerList = () => {
         ))}
       </List>
     </Box>
-  );
-};
-
-const DoubleConfirmDelete = ({
-  disabled,
-  onClick: onConfirmed,
-}: {
-  onClick: VoidFunction;
-  disabled?: boolean;
-}) => {
-  return (
-    <DoubleConfirm
-      title={"Double Click To Delete"}
-      render={(confirmFirst, isDoubleConfirmed) => (
-        <IconButton
-          size={"small"}
-          color={isDoubleConfirmed ? "error" : "default"}
-          onClick={isDoubleConfirmed ? onConfirmed : confirmFirst}
-          disabled={disabled}
-        >
-          <DeleteIcon fontSize={"inherit"} />
-        </IconButton>
-      )}
-      timeout={3000}
-    />
   );
 };
 
@@ -340,8 +314,9 @@ const TriggerDetail = () => {
           marginLeft: "16px",
           marginBottom: "16px",
         }}
+        color={script ? "inherit" : "error"}
       >
-        {script?.name}
+        {script?.name ?? "Script Not Found"}
       </Typography>
 
       <MonacoEditor
@@ -361,7 +336,7 @@ const TriggerDetail = () => {
           marginRight: "16px",
         }}
       >
-        Run At: {lastRunTime}
+        Run At: {lastRunTime || "-s"}
       </Typography>
     </Stack>
   );

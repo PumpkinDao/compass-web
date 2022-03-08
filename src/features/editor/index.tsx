@@ -3,6 +3,7 @@ import {
   AppBar,
   Box,
   Button,
+  CircularProgress,
   IconButton,
   LinearProgress,
   List,
@@ -21,7 +22,7 @@ import { useMemo, useState } from "react";
 import MonacoEditor from "../../components/monaco-editor";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { editorActions, editorSelectors } from "./slice";
+import { editorActions, editorSelectors, isLocalScript } from "./slice";
 import { walletSelectors } from "../../redux/wallet";
 import {
   useInitialize,
@@ -30,6 +31,8 @@ import {
   useScriptSync,
 } from "./hooks";
 import { useWeb3ReactActivate } from "../../redux/wallet/hooks";
+import { useDeleteScriptMutation } from "../../redux/stats-api";
+import DoubleConfirmDelete from "../../components/double-confirm-delete";
 
 const EditorTopBar = () => {
   const wallet = useAppSelector(walletSelectors.connectedAddress);
@@ -66,6 +69,9 @@ const ScriptList = () => {
   const scripts = useAppSelector(editorSelectors.allScripts);
   const selectedId = useAppSelector(editorSelectors.selectedScriptId);
 
+  const [deleteScript, { isLoading: isDeleting, originalArgs: deletingId }] =
+    useDeleteScriptMutation();
+
   return (
     <Box sx={{ overflow: "auto" }}>
       <Stack
@@ -98,7 +104,24 @@ const ScriptList = () => {
         }}
       >
         {scripts.map((i) => (
-          <ListItem key={i.id} disablePadding selected={selectedId === i.id}>
+          <ListItem
+            key={i.id}
+            disablePadding
+            selected={selectedId === i.id}
+            secondaryAction={
+              isDeleting && i.id === deletingId ? (
+                <CircularProgress color={"inherit"} size={24} />
+              ) : (
+                <DoubleConfirmDelete
+                  onClick={() =>
+                    isLocalScript(i.id)
+                      ? dispatch(editorActions.deleteLocal(i.id))
+                      : deleteScript(i.id)
+                  }
+                />
+              )
+            }
+          >
             <ListItemButton
               onClick={() => dispatch(editorActions.select(i.id))}
             >

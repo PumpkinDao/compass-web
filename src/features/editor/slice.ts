@@ -1,5 +1,10 @@
 import { v4 as uuidv4 } from "uuid";
-import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import {
+  createSelector,
+  createSlice,
+  Draft,
+  PayloadAction,
+} from "@reduxjs/toolkit";
 import { createSliceSelector } from "../../redux/utils";
 import { Script, statEndpoints } from "../../redux/stats-api";
 
@@ -74,6 +79,12 @@ const slice = createSlice({
     },
     select: (state, action: PayloadAction<string>) => {
       state.selectedId = action.payload;
+    },
+    deleteLocal: (state, action: PayloadAction<string>) => {
+      const scriptId = action.payload;
+      if (isLocalScript(scriptId)) {
+        deleteScriptAndUpdateState(scriptId, state);
+      }
     },
     draftScriptCode: (
       state,
@@ -189,9 +200,35 @@ const slice = createSlice({
             meta,
             isCodeSynced: true,
           });
-      });
+      })
+      .addMatcher(
+        statEndpoints.deleteScript.matchFulfilled,
+        (state, action) => {
+          const {
+            arg: { originalArgs: scriptId },
+          } = action.meta;
+
+          deleteScriptAndUpdateState(scriptId, state);
+        }
+      );
   },
 });
+
+const deleteScriptAndUpdateState = (
+  scriptId: string,
+  state: Draft<EditorState>
+) => {
+  let scriptList = Object.values(state.scripts).sort(descScripts);
+  delete state.scripts[scriptId];
+
+  if (state.selectedId === scriptId) {
+    const index = scriptList.findIndex((i) => i.id === scriptId);
+    scriptList = scriptList.filter((i) => i.id !== scriptId);
+
+    state.selectedId =
+      scriptList.length > index ? scriptList[index].id : scriptList[0]?.id;
+  }
+};
 
 export const { reducer } = slice;
 export const editorActions = slice.actions;
