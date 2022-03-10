@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   CircularProgress,
+  Container,
   IconButton,
   LinearProgress,
   List,
@@ -233,8 +234,8 @@ const MainActionBlock = () => {
       <LoadingButton
         variant={"contained"}
         color={"secondary"}
-        loading={isSaving || isRunning}
-        disabled={!saveBtnEnabled || !runBtnEnabled}
+        loading={isRunning}
+        disabled={isSaving || !runBtnEnabled}
         onClick={() =>
           Promise.resolve(hasDraftCode ? saveAction() : undefined).then(
             runAction

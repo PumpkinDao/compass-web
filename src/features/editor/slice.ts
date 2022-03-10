@@ -47,6 +47,7 @@ export const run = async ({ address }: { address: string }) => {
     tag: "sample balance",
     updatedAt: 0,
   },
+  testParamStr: "{}",
 };
 
 const newDemoScript = (): Script =>
@@ -182,6 +183,7 @@ const slice = createSlice({
             acc[cur.id] = {
               ...cur,
               code: "",
+              testParamStr: "{}",
               isCodeSynced: false,
             };
             return acc;
