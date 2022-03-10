@@ -290,6 +290,24 @@ const RunBlock = () => {
   const dispatch = useAppDispatch();
   const script = useAppSelector(editorSelectors.selectedScript);
 
+  const [testStatus, testResult] = useMemo(() => {
+    if (!script?.testResult) {
+      return ["fulfilled", ""];
+    }
+    let status, value;
+
+    try {
+      const result = JSON.parse(script.testResult);
+      status = result.status;
+      value = JSON.stringify(result?.value || result?.reason, undefined, 2);
+    } catch (e) {
+      status = "rejected";
+      value = e.toString();
+    }
+
+    return [status, value];
+  }, [script?.testResult]);
+
   return (
     <Box sx={{ padding: "16px" }}>
       <Typography
@@ -335,8 +353,8 @@ const RunBlock = () => {
           multiline
           fullWidth
           maxRows={5}
-          disabled
-          value={script?.testResult}
+          error={testStatus === "rejected"}
+          value={testResult}
         />
       </Box>
     </Box>
