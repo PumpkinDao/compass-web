@@ -27,12 +27,16 @@ import { walletSelectors } from "../../redux/wallet";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { triggerActions, triggerSelectors } from "./slice";
 import { useWeb3ReactActivate } from "../../redux/wallet/hooks";
+import * as React from "react";
 import { useEffect, useMemo, useState } from "react";
 import { editorSelectors } from "../editor/slice";
 import {
   Trigger,
+  useAddStatementMutation,
   useAddTriggerMutation,
+  useDeleteStatementMutation,
   useDeleteTriggerMutation,
+  useLazyListStatementsQuery,
   useListTriggerActivitiesQuery,
 } from "../../redux/stats-api";
 import MonacoEditor from "../../components/monaco-editor";
@@ -40,6 +44,8 @@ import LoadingButton from "@mui/lab/LoadingButton";
 
 import moment from "moment";
 import DoubleConfirmDelete from "../../components/double-confirm-delete";
+import NewStatementModal from "../new-statement-modal";
+import StatementList from "../../components/statement-list";
 
 const TriggerTopBar = () => {
   const wallet = useAppSelector(walletSelectors.connectedAddress);
@@ -306,6 +312,24 @@ const TriggerDetail = () => {
     return trigger?.lastRunTime && moment(trigger.lastRunTime).fromNow();
   }, [trigger?.lastRunTime]);
 
+  const [listStatements, { data: statements = [] }] =
+    useLazyListStatementsQuery();
+  const [openModal, setOpenModal] = useState(false);
+  const [
+    addStatement,
+    { isLoading: isAdding, fulfilledTimeStamp: addedTimestamp },
+  ] = useAddStatementMutation();
+  const [
+    deleteStatement,
+    { fulfilledTimeStamp: deletedTimestamp, originalArgs: deletingId = -1 },
+  ] = useDeleteStatementMutation();
+
+  useEffect(() => {
+    if (typeof trigger?.id === "number") {
+      listStatements(trigger.id);
+    }
+  }, [trigger?.id, addedTimestamp, deletedTimestamp]);
+
   return (
     <Stack direction={"column"}>
       <Typography
@@ -338,6 +362,29 @@ const TriggerDetail = () => {
       >
         Run At: {lastRunTime || "-s"}
       </Typography>
+
+      <Box marginTop={"32px"} />
+
+      <StatementList
+        statements={statements}
+        onDeleteStatementClick={(id) => deleteStatement(id)}
+        deletingId={deletingId}
+        onNewStatementClick={() => setOpenModal(true)}
+      />
+
+      {openModal && (
+        <NewStatementModal
+          open={openModal}
+          onClose={() => setOpenModal(false)}
+          onCancel={() => setOpenModal(false)}
+          onConfirm={(v) =>
+            addStatement({ ...v, triggerId: trigger?.id as number }).then(() =>
+              setOpenModal(false)
+            )
+          }
+          isAdding={isAdding}
+        />
+      )}
     </Stack>
   );
 };

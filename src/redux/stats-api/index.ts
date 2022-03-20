@@ -34,6 +34,31 @@ export type TriggerActivity = {
   createdAt: number;
 };
 
+export type Notifier = {
+  id: number;
+  name: string;
+  variant: number; // todo
+  payload: string;
+  createdAt: number;
+};
+
+export type OP = "eq" | "nq" | "gt" | "gte" | "lt" | "lte" | "range" | "exist";
+
+export type Statement = {
+  id: number;
+  triggerId: number;
+  operator: OP;
+  keyword: string;
+  expect: string;
+  notifier: string;
+  notifyMsg: string;
+  throttleTimeout: number;
+};
+
+export type DraftStatement = Omit<Statement, "id" | "notifier"> & {
+  notifierId: number;
+};
+
 const api = createApi({
   reducerPath: NAMESPACE,
   baseQuery: fetchBaseQuery({
@@ -119,6 +144,28 @@ const api = createApi({
       query: (triggerId: number) => `triggers/${triggerId}/activities`,
       transformResponse: transformResponse,
     }),
+    listNotifiers: builder.query<Notifier[], string>({
+      query: (owner: string) => `notifiers?owner=${owner}`,
+      transformResponse: transformResponse,
+    }),
+    addStatement: builder.mutation<undefined, DraftStatement>({
+      query: ({ triggerId, ...body }) => ({
+        url: `triggers/${triggerId}/statements`,
+        method: "POST",
+        body: { ...body, severity: "info" },
+      }),
+      transformResponse: transformResponse,
+    }),
+    listStatements: builder.query<Statement[], number>({
+      query: (triggerId) => `triggers/${triggerId}/statements`,
+      transformResponse: transformResponse,
+    }),
+    deleteStatement: builder.mutation<undefined, number>({
+      query: (statementId: number) => ({
+        url: `statements/${statementId}`,
+        method: "DELETE",
+      }),
+    }),
   }),
 });
 
@@ -137,4 +184,8 @@ export const {
   useAddTriggerMutation,
   useListTriggerActivitiesQuery,
   useDeleteTriggerMutation,
+  useListNotifiersQuery,
+  useAddStatementMutation,
+  useDeleteStatementMutation,
+  useLazyListStatementsQuery,
 } = api;
