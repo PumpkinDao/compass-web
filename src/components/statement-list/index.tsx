@@ -31,6 +31,8 @@ const StatementItem = ({
     onDeleteClick();
   }, [doubleConfirming, onDeleteClick, isDeleting]);
 
+  keyword = keyword === "." ? "value" : keyword;
+
   return (
     <Tooltip
       title={`with "${notifyMsg}" in every ${

@@ -133,11 +133,6 @@ const NewStatementModal = ({
   const [throttleTimeout, setThrottleTimeout] = useState<number>(0);
 
   const [disableConfirmBtn, onConfirmInner] = useMemo(() => {
-    console.log({
-      operator,
-      notifierId,
-      notifyMsg,
-    });
     if (operator && notifierId && notifyMsg) {
       return [
         false,
