@@ -96,7 +96,7 @@ const api = createApi({
     >({
       query: ({ scriptId, ...body }) => ({
         url: `scripts/${scriptId}`,
-        method: "POST",
+        method: "PATCH",
         body: body,
       }),
       transformResponse: transformResponse,
