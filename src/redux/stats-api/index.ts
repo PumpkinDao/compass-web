@@ -34,13 +34,18 @@ export type TriggerActivity = {
   createdAt: number;
 };
 
+export type NotifierVariant = "webhook" | "slack";
+
 export type Notifier = {
   id: number;
+  owner: string;
   name: string;
-  variant: number; // todo
+  variant: NotifierVariant;
   payload: string;
   createdAt: number;
 };
+
+export type DraftNotifier = Omit<Notifier, "id" | "createdAt">;
 
 export type OP = "eq" | "nq" | "gt" | "gte" | "lt" | "lte" | "range" | "exist";
 
@@ -63,6 +68,7 @@ const api = createApi({
   reducerPath: NAMESPACE,
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.REACT_APP_STATS_API_BASE_URL,
+    mode: "cors",
   }),
   endpoints: (builder) => ({
     listScripts: builder.query<Omit<Script, "code">[], string>({
@@ -148,6 +154,21 @@ const api = createApi({
       query: (owner: string) => `notifiers?owner=${owner}`,
       transformResponse: transformResponse,
     }),
+    addNotifier: builder.mutation<undefined, DraftNotifier>({
+      query: (body) => ({
+        url: `notifiers`,
+        method: "POST",
+        body: body,
+      }),
+      transformResponse: transformResponse,
+    }),
+    deleteNotifier: builder.mutation<Notifier[], number>({
+      query: (notifierId) => ({
+        url: `notifiers/${notifierId}`,
+        method: "DELETE",
+      }),
+      transformResponse: transformResponse,
+    }),
     addStatement: builder.mutation<undefined, DraftStatement>({
       query: ({ triggerId, ...body }) => ({
         url: `triggers/${triggerId}/statements`,
@@ -185,6 +206,9 @@ export const {
   useListTriggerActivitiesQuery,
   useDeleteTriggerMutation,
   useListNotifiersQuery,
+  useLazyListNotifiersQuery,
+  useAddNotifierMutation,
+  useDeleteNotifierMutation,
   useAddStatementMutation,
   useDeleteStatementMutation,
   useLazyListStatementsQuery,

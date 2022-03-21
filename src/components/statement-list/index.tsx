@@ -33,7 +33,9 @@ const StatementItem = ({
 
   return (
     <Tooltip
-      title={`with ${notifyMsg} in every ${throttleTimeout / 60000} minute(s)`}
+      title={`with "${notifyMsg}" in every ${
+        throttleTimeout / 60000
+      } minute(s)`}
     >
       <Stack direction={"row"}>
         <Chip

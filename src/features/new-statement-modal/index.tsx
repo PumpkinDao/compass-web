@@ -27,6 +27,7 @@ import {
 import { useAppSelector } from "../../redux/hooks";
 import { walletSelectors } from "../../redux/wallet";
 import LoadingButton from "@mui/lab/LoadingButton";
+import { useNavigate } from "react-router-dom";
 
 const MINUTE_TO_MILLISECOND = 60 * 1000;
 
@@ -71,6 +72,7 @@ const NotifierSelect = ({
   const account = useAppSelector(walletSelectors.connectedAddress);
   const { data: notifiers } = useListNotifiersQuery(account);
   const [selectedId, setSelectedId] = useState<number | undefined>();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (
@@ -91,6 +93,15 @@ const NotifierSelect = ({
         value={selectedId}
         onChange={(e) => setSelectedId(Number(e.target.value))}
       >
+        <MenuItem
+          key={"new"}
+          value={"new"}
+          onClick={() => navigate("/notifier")}
+        >
+          <Typography sx={{ textDecoration: "underline", fontStyle: "italic" }}>
+            New
+          </Typography>
+        </MenuItem>
         {(notifiers || []).map(({ id, name }) => (
           <MenuItem key={id} value={String(id)}>
             {name}

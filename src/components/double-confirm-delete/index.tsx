@@ -1,25 +1,27 @@
 import DoubleConfirm from "../double-confirm";
 import { IconButton } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
+import CancelIcon from "@mui/icons-material/Cancel";
 
 const DoubleConfirmDelete = ({
   disabled,
   onClick: onConfirmed,
+  size,
 }: {
   onClick: VoidFunction;
   disabled?: boolean;
+  size?: "small" | "medium" | "large";
 }) => {
   return (
     <DoubleConfirm
       title={"Double Click Delete"}
       render={(confirmFirst, isDoubleConfirmed) => (
         <IconButton
-          size={"small"}
-          color={isDoubleConfirmed ? "error" : "default"}
+          size={size ?? "small"}
+          color={isDoubleConfirmed ? "warning" : "default"}
           onClick={isDoubleConfirmed ? onConfirmed : confirmFirst}
           disabled={disabled}
         >
-          <DeleteIcon fontSize={"inherit"} />
+          <CancelIcon fontSize={"inherit"} />
         </IconButton>
       )}
       timeout={3000}
