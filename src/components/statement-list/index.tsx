@@ -6,6 +6,16 @@ import { useCallback, useState } from "react";
 import CancelIcon from "@mui/icons-material/Cancel";
 import PendingIcon from "@mui/icons-material/Pending";
 
+export const descIfStatement = ({
+  keyword,
+  operator,
+  expect,
+}: Pick<Statement, "keyword" | "operator" | "expect">) => {
+  keyword = keyword === "." ? "value" : keyword;
+
+  return `If ${keyword} ${ops[operator].indicator} ${expect}`;
+};
+
 const StatementItem = ({
   keyword,
   operator,
@@ -31,8 +41,6 @@ const StatementItem = ({
     onDeleteClick();
   }, [doubleConfirming, onDeleteClick, isDeleting]);
 
-  keyword = keyword === "." ? "value" : keyword;
-
   return (
     <Tooltip
       title={`with "${notifyMsg}" in every ${
@@ -42,9 +50,7 @@ const StatementItem = ({
       <Stack direction={"row"}>
         <Chip
           variant={"outlined"}
-          label={`
-        If ${keyword} ${ops[operator].indicator} ${expect} 
-      `}
+          label={descIfStatement({ keyword, operator, expect })}
           sx={{ backgroundColor: "#1e1e1e", zIndex: 100 }}
           color={doubleConfirming ? "warning" : "default"}
         />
@@ -100,14 +106,16 @@ const StatementList = ({
 }) => {
   return (
     <Stack padding={"16px"} divider={<Box marginTop={"8px"} />}>
-      {statements.map((i) => (
-        <StatementItem
-          key={i.id}
-          {...i}
-          onDeleteClick={() => onDeleteStatementClick(i.id)}
-          isDeleting={deletingId === i.id}
-        />
-      ))}
+      {statements
+        .filter((i) => i.operator in ops)
+        .map((i) => (
+          <StatementItem
+            key={i.id}
+            {...i}
+            onDeleteClick={() => onDeleteStatementClick(i.id)}
+            isDeleting={deletingId === i.id}
+          />
+        ))}
       <NewStatementBtn onClick={onNewStatementClick} />
     </Stack>
   );

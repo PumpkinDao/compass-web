@@ -46,6 +46,7 @@ import moment from "moment";
 import DoubleConfirmDelete from "../../components/double-confirm-delete";
 import NewStatementModal from "../new-statement-modal";
 import StatementList from "../../components/statement-list";
+import StatementResultList from "../../components/statement-result-list";
 
 const TriggerTopBar = () => {
   const wallet = useAppSelector(walletSelectors.connectedAddress);
@@ -415,6 +416,7 @@ const TriggerActivities = () => {
         status,
         value,
         timeUsed: timeUsed <= 0 ? `Less than 1s` : `${timeUsed}s`,
+        statementResults: i.statementResults,
       };
     });
   }, [data]);
@@ -455,6 +457,8 @@ const TriggerActivities = () => {
             >
               {i.timeUsed}
             </Typography>
+
+            <StatementResultList statementResults={i.statementResults} />
           </CardContent>
         </Card>
       ))}

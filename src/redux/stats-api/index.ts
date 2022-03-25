@@ -26,12 +26,24 @@ export type Trigger = {
   lastRunTime?: number;
 };
 
+export type StatementResult = {
+  statement: {
+    operator: OP;
+    keyword: string;
+    expect: string;
+    notifier: string;
+  };
+  op: PromiseSettledResult<boolean>;
+  notify: PromiseSettledResult<"ok" | "disabled" | "throttled">;
+};
+
 export type TriggerActivity = {
   id: number;
   triggerId: number;
   timeUsed: number;
   result: string;
   createdAt: number;
+  statementResults: StatementResult[];
 };
 
 export type NotifierVariant = "webhook" | "slack";
@@ -83,6 +95,7 @@ const api = createApi({
       { scriptId: string },
       { owner: string; code: string; localScriptId: string }
     >({
+      /* eslint-disable */
       query: ({ localScriptId: _, ...body }) => ({
         url: "scripts",
         method: "POST",
