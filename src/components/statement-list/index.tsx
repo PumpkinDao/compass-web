@@ -11,8 +11,11 @@ export const descIfStatement = ({
   operator,
   expect,
 }: Pick<Statement, "keyword" | "operator" | "expect">) => {
-  keyword = keyword === "." ? "value" : keyword;
+  if (operator === "error") {
+    return "if error";
+  }
 
+  keyword = keyword === "." ? "value" : keyword;
   return `If ${keyword} ${ops[operator].indicator} ${expect}`;
 };
 

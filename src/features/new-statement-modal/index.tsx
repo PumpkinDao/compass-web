@@ -165,7 +165,9 @@ const NewStatementModal = ({
       <DialogContent sx={{ minWidth: "400px" }}>
         <Row>
           <Typography>If</Typography>
-          <KeywordInput onValueChanged={setKeyword} />
+          {operator !== "error" ? (
+            <KeywordInput onValueChanged={setKeyword} />
+          ) : null}
           <OperatorSelect
             onOpChanged={(op) => {
               expect && setExpect("");

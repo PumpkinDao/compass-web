@@ -142,6 +142,10 @@ export const ops: Record<
     indicator: "existing",
     input: () => null,
   },
+  error: {
+    indicator: "error",
+    input: () => null,
+  },
 };
 
 const Op = ({

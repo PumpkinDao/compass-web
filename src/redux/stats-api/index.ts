@@ -59,7 +59,16 @@ export type Notifier = {
 
 export type DraftNotifier = Omit<Notifier, "id" | "createdAt">;
 
-export type OP = "eq" | "nq" | "gt" | "gte" | "lt" | "lte" | "range" | "exist";
+export type OP =
+  | "eq"
+  | "nq"
+  | "gt"
+  | "gte"
+  | "lt"
+  | "lte"
+  | "range"
+  | "exist"
+  | "error";
 
 export type Statement = {
   id: number;
