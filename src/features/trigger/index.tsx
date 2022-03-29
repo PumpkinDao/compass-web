@@ -227,6 +227,30 @@ const TriggerCreating = () => {
     return true;
   }, [draft, scripts]);
 
+  useEffect(() => {
+    if (!draft?.scriptId || !scripts || scripts.length <= 0) {
+      return;
+    }
+
+    const script = scripts.find((i) => i.id === draft.scriptId);
+    if (!script) {
+      return;
+    }
+
+    const args = script.meta.args || "";
+
+    setDraft((prev) => ({
+      ...prev,
+      params: JSON.stringify(
+        args
+          ? Object.fromEntries(args.split(",").map((name) => [name, null]))
+          : {},
+        undefined,
+        2
+      ),
+    }));
+  }, [draft?.scriptId, scripts]);
+
   return (
     <Stack
       direction={"column"}
@@ -259,7 +283,7 @@ const TriggerCreating = () => {
         >
           {scripts.map((i) => (
             <MenuItem key={i.id} value={i.id}>
-              {i.name}
+              {i.meta.name}
             </MenuItem>
           ))}
         </Select>
@@ -341,7 +365,7 @@ const TriggerDetail = () => {
         }}
         color={script ? "inherit" : "error"}
       >
-        {script?.name ?? "Script Not Found"}
+        {script?.meta.name ?? "Script Not Found"}
       </Typography>
 
       <MonacoEditor

@@ -9,6 +9,7 @@ export type MetaData = {
   description: string;
   tag: string;
   updatedAt: number;
+  args: string;
 };
 
 export type Script = {

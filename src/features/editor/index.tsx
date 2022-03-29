@@ -18,7 +18,7 @@ import {
   Typography,
 } from "@mui/material";
 import SplitPane from "../../components/split-pane";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import MonacoEditor from "../../components/monaco-editor";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
@@ -125,7 +125,9 @@ const ScriptList = () => {
             <ListItemButton
               onClick={() => dispatch(editorActions.select(i.id))}
             >
-              <ListItemText sx={{ paddingLeft: "16px" }}>{i.name}</ListItemText>
+              <ListItemText sx={{ paddingLeft: "16px" }}>
+                {i.meta.name}
+              </ListItemText>
             </ListItemButton>
           </ListItem>
         ))}
@@ -306,6 +308,36 @@ const RunBlock = () => {
 
     return [status, value];
   }, [script?.testResult]);
+
+  useEffect(() => {
+    if (!script) {
+      return;
+    }
+    let params = {};
+
+    try {
+      params = JSON.parse(script.testParamStr as string);
+    } catch (e) {
+      // ignored
+    }
+
+    params = Object.assign(
+      {},
+      script.meta.args
+        ? Object.fromEntries(
+            script.meta.args.split(",").map((name) => [name, null])
+          )
+        : {},
+      params
+    );
+
+    dispatch(
+      editorActions.inputParams({
+        id: script.id,
+        testParamStr: JSON.stringify(params, undefined, 2),
+      })
+    );
+  }, [script?.meta.args]);
 
   return (
     <Box sx={{ padding: "16px" }}>

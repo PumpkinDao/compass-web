@@ -46,6 +46,7 @@ export const run = async ({ address }: { address: string }) => {
     description: "Get the balance of address",
     tag: "sample balance",
     updatedAt: 0,
+    args: "",
   },
   testParamStr: "{}",
 };
@@ -163,15 +164,13 @@ const slice = createSlice({
       .addMatcher(
         statEndpoints.getScriptMeta.matchFulfilled,
         (state, action) => {
-          const { scriptId, name, description, tag } = action.payload;
+          const { scriptId, ...meta } = action.payload;
 
           const script = state.scripts[scriptId];
           script &&
             (script.meta = {
               ...script.meta,
-              name,
-              description,
-              tag,
+              ...meta,
             });
         }
       )
@@ -198,7 +197,6 @@ const slice = createSlice({
           (state.scripts[id] = {
             ...state.scripts[id],
             code,
-            meta,
             isCodeSynced: true,
           });
       })
@@ -236,10 +234,10 @@ export const editorActions = slice.actions;
 
 const sliceSelector = createSliceSelector(NAMESPACE);
 
-const allScripts = createSelector(sliceSelector, (state) =>
-  Object.values(state.scripts)
-    .sort(descScripts)
-    .map((i) => ({ id: i.id, name: i.meta.name }))
+const allScripts = createSelector(
+  sliceSelector,
+  (state) => Object.values(state.scripts).sort(descScripts)
+  // .map((i) => ({ id: i.id, name: i.meta.name }))
 );
 
 const descScripts = (a: Pick<Script, "meta">, b: Pick<Script, "meta">) =>
