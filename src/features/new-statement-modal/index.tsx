@@ -69,8 +69,8 @@ const NotifierSelect = ({
 }: {
   onValueChanged: (id: number) => void;
 }) => {
-  const account = useAppSelector(walletSelectors.connectedAddress);
-  const { data: notifiers } = useListNotifiersQuery(account);
+  const account = useAppSelector(walletSelectors.connectedAccount);
+  const { data: notifiers } = useListNotifiersQuery(account as string);
   const [selectedId, setSelectedId] = useState<number | undefined>();
   const navigate = useNavigate();
 

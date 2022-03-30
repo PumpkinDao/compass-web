@@ -42,7 +42,7 @@ import { showMessageBar } from "../message-bar/slice";
 import { useWeb3Activate } from "../web3-root/hooks";
 
 const TopBar = () => {
-  const wallet = useAppSelector(walletSelectors.connectedAddress);
+  const account = useAppSelector(walletSelectors.connectedAccount);
   const activeWeb3 = useWeb3Activate();
 
   return (
@@ -54,10 +54,12 @@ const TopBar = () => {
         </Typography>
         <Button
           variant={"contained"}
-          disabled={!!wallet}
+          disabled={!!account}
           onClick={() => activeWeb3()}
         >
-          {wallet ? `${wallet.slice(0, 6)}...${wallet.slice(-6)}` : "Connect"}
+          {account
+            ? `${account.slice(0, 6)}...${account.slice(-6)}`
+            : "Connect"}
         </Button>
       </Toolbar>
     </AppBar>
@@ -65,7 +67,7 @@ const TopBar = () => {
 };
 
 const Notifier$ = () => {
-  const account = useAppSelector(walletSelectors.connectedAddress);
+  const account = useAppSelector(walletSelectors.connectedAccount);
   const [listNotifiers, { data }] = useLazyListNotifiersQuery();
 
   const notifiers = useMemo(() => {
@@ -123,7 +125,7 @@ const Notifier$ = () => {
           onClose={() => setOpenModal(false)}
           onCancel={() => setOpenModal(false)}
           onConfirm={(v) =>
-            addNotifier({ owner: account, ...v }).then(() =>
+            addNotifier({ owner: account as string, ...v }).then(() =>
               setOpenModal(false)
             )
           }

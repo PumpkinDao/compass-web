@@ -59,9 +59,9 @@ export const useReduxSync = () => {
 
   useEffect(() => {
     if (account) {
-      dispatch(walletActions.connectAddress(account));
+      dispatch(walletActions.connectAccount(account));
     } else {
-      dispatch(walletActions.disconnectAddress());
+      dispatch(walletActions.disconnectAccount());
     }
   }, [account]);
 

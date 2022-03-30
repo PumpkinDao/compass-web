@@ -49,7 +49,7 @@ import StatementResultList from "../../components/statement-result-list";
 import { useWeb3Activate } from "../web3-root/hooks";
 
 const TriggerTopBar = () => {
-  const wallet = useAppSelector(walletSelectors.connectedAddress);
+  const account = useAppSelector(walletSelectors.connectedAccount);
   const activeWeb3 = useWeb3Activate();
 
   return (
@@ -61,10 +61,12 @@ const TriggerTopBar = () => {
         </Typography>
         <Button
           variant={"contained"}
-          disabled={!!wallet}
+          disabled={!!account}
           onClick={() => activeWeb3()}
         >
-          {wallet ? `${wallet.slice(0, 6)}...${wallet.slice(-6)}` : "Connect"}
+          {account
+            ? `${account.slice(0, 6)}...${account.slice(-6)}`
+            : "Connect"}
         </Button>
       </Toolbar>
       <TopProgress />
@@ -101,7 +103,7 @@ const IntervalProgress = ({ interval }: { interval: number }) => {
 
 const TriggerList = () => {
   const dispatch = useAppDispatch();
-  const wallet = useAppSelector(walletSelectors.connectedAddress);
+  const account = useAppSelector(walletSelectors.connectedAccount);
   const triggers = useAppSelector(triggerSelectors.allTriggers);
   const selectedId = useAppSelector(triggerSelectors.selectedTriggerId);
   const [deleteTrigger, { isLoading: isDeleting, originalArgs: deletingId }] =
@@ -125,7 +127,7 @@ const TriggerList = () => {
         </Typography>
 
         <IconButton
-          disabled={!wallet}
+          disabled={!account}
           onClick={() => dispatch(triggerActions.enterCreating())}
         >
           <AddCircleIcon fontSize={"small"} sx={{ color: "rgb(51, 51, 51)" }} />
@@ -196,7 +198,7 @@ const TriggerViewer = () => {
 
 const TriggerCreating = () => {
   const dispatch = useAppDispatch();
-  const wallet = useAppSelector(walletSelectors.connectedAddress);
+  const account = useAppSelector(walletSelectors.connectedAccount);
   const [addTrigger, { isLoading: isAddingTrigger }] = useAddTriggerMutation();
   const [draft, setDraft] = useState<
     Partial<Pick<Trigger, "name" | "scriptId" | "params">>
@@ -315,7 +317,7 @@ const TriggerCreating = () => {
         <LoadingButton
           disabled={!isDraftReady}
           loading={isAddingTrigger}
-          onClick={() => addTrigger({ ...draft, owner: wallet } as never)}
+          onClick={() => addTrigger({ ...draft, owner: account } as never)}
           variant={"contained"}
         >
           Create

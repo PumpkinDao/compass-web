@@ -12,14 +12,14 @@ import {
 import { walletSelectors } from "../../redux/wallet";
 
 export const useInitialize = () => {
-  const wallet = useAppSelector(walletSelectors.connectedAddress);
+  const account = useAppSelector(walletSelectors.connectedAccount);
   const [listScripts] = useLazyListScriptsQuery();
 
   useEffect(() => {
-    if (wallet) {
-      listScripts(wallet);
+    if (account) {
+      listScripts(account);
     }
-  }, [wallet]);
+  }, [account]);
 };
 
 export const useScriptSync = () => {
@@ -44,7 +44,7 @@ export const useSaveAction = (): [boolean, VoidFunction] => {
   ] = useUpdateScriptMutation();
   const [getScriptMeta] = useLazyGetScriptMetaQuery();
 
-  const wallet = useAppSelector(walletSelectors.connectedAddress);
+  const account = useAppSelector(walletSelectors.connectedAccount);
   const script = useAppSelector(editorSelectors.selectedScript);
 
   useEffect(() => {
@@ -56,21 +56,21 @@ export const useSaveAction = (): [boolean, VoidFunction] => {
   return [
     isAdding || isUpdating,
     useCallback(async () => {
-      if (!script || !wallet) {
+      if (!script || !account) {
         return;
       }
 
       const { id, draft } = script;
       if (isLocalScript(id)) {
         await addScript({
-          owner: wallet,
+          owner: account,
           code: draft as string,
           localScriptId: id,
         });
       } else {
         await updateScript({ scriptId: id, code: draft as string });
       }
-    }, [script, wallet]),
+    }, [script, account]),
   ];
 };
 

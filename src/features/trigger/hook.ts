@@ -8,13 +8,13 @@ import { useInitialize as useEditorInitialize } from "../editor/hooks";
 export const useInitialize = () => {
   useEditorInitialize();
 
-  const wallet = useAppSelector(walletSelectors.connectedAddress);
+  const account = useAppSelector(walletSelectors.connectedAccount);
   const isCreating = useAppSelector(triggerSelectors.isCreating);
   const [listTriggers] = useLazyListTriggersQuery();
 
   useEffect(() => {
-    if (wallet && !isCreating) {
-      listTriggers(wallet);
+    if (account && !isCreating) {
+      listTriggers(account);
     }
-  }, [wallet, isCreating]);
+  }, [account, isCreating]);
 };

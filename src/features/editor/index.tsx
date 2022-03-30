@@ -35,7 +35,7 @@ import DoubleConfirmDelete from "../../components/double-confirm-delete";
 import { useWeb3Activate } from "../web3-root/hooks";
 
 const EditorTopBar = () => {
-  const wallet = useAppSelector(walletSelectors.connectedAddress);
+  const account = useAppSelector(walletSelectors.connectedAccount);
   const isScriptSyncing = useScriptSync();
   const activeWeb3 = useWeb3Activate();
 
@@ -48,10 +48,12 @@ const EditorTopBar = () => {
         </Typography>
         <Button
           variant={"contained"}
-          disabled={!!wallet}
+          disabled={!!account}
           onClick={() => activeWeb3()}
         >
-          {wallet ? `${wallet.slice(0, 6)}...${wallet.slice(-6)}` : "Connect"}
+          {account
+            ? `${account.slice(0, 6)}...${account.slice(-6)}`
+            : "Connect"}
         </Button>
       </Toolbar>
       {isScriptSyncing && (
@@ -65,7 +67,7 @@ const EditorTopBar = () => {
 
 const ScriptList = () => {
   const dispatch = useAppDispatch();
-  const wallet = useAppSelector(walletSelectors.connectedAddress);
+  const account = useAppSelector(walletSelectors.connectedAccount);
   const scripts = useAppSelector(editorSelectors.allScripts);
   const selectedId = useAppSelector(editorSelectors.selectedScriptId);
 
@@ -90,7 +92,7 @@ const ScriptList = () => {
         </Typography>
 
         <IconButton
-          disabled={!wallet}
+          disabled={!account}
           onClick={() => dispatch(editorActions.create())}
         >
           <AddCircleIcon fontSize={"small"} sx={{ color: "rgb(51, 51, 51)" }} />
@@ -194,7 +196,7 @@ const ScriptViewer = () => {
 };
 
 const MainActionBlock = () => {
-  const wallet = useAppSelector(walletSelectors.connectedAddress);
+  const account = useAppSelector(walletSelectors.connectedAccount);
   const script = useAppSelector(editorSelectors.selectedScript);
   const isOnlyLocalScript = useMemo(
     () => script && script.id.startsWith("local"),
@@ -216,7 +218,7 @@ const MainActionBlock = () => {
 
   const saveBtnEnabled = isOnlyLocalScript || hasDraftCode;
   const runBtnEnabled =
-    !!wallet && !isOnlyLocalScript && typeof params === "object";
+    !!account && !isOnlyLocalScript && typeof params === "object";
 
   const [isSaving, saveAction] = useSaveAction();
   const [isRunning, runAction] = useRunAction();

@@ -4,22 +4,22 @@ import { createSliceSelector } from "../utils";
 export const NAMESPACE = "wallet";
 
 type WalletState = {
-  address: string;
+  account: string | undefined;
 };
 
 const initialState: WalletState = {
-  address: "",
+  account: undefined,
 };
 
 const slice = createSlice({
   name: NAMESPACE,
   initialState,
   reducers: {
-    connectAddress: (state, action: PayloadAction<string>) => {
-      state.address = action.payload;
+    connectAccount: (state, action: PayloadAction<string>) => {
+      state.account = action.payload;
     },
-    disconnectAddress: (state) => {
-      state.address = "";
+    disconnectAccount: (state) => {
+      state.account = undefined;
     },
   },
 });
@@ -28,8 +28,8 @@ export const { reducer } = slice;
 export const walletActions = slice.actions;
 
 const sliceSelector = createSliceSelector(NAMESPACE);
-const connectedAddress = createSelector(
+const connectedAccount = createSelector(
   sliceSelector,
-  (wallet) => wallet.address
+  (wallet) => wallet.account
 );
-export const walletSelectors = { connectedAddress };
+export const walletSelectors = { connectedAccount };
