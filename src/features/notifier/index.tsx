@@ -1,6 +1,5 @@
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { walletSelectors } from "../../redux/wallet";
-import { useWeb3ReactActivate } from "../../redux/wallet/hooks";
 import PendingIcon from "@mui/icons-material/Pending";
 import {
   AppBar,
@@ -40,10 +39,11 @@ import AddIcon from "@mui/icons-material/Add";
 import LoadingButton from "@mui/lab/LoadingButton";
 import tests from "./notifier-tester";
 import { showMessageBar } from "../message-bar/slice";
+import { useWeb3Activate } from "../web3-root/hooks";
 
 const TopBar = () => {
   const wallet = useAppSelector(walletSelectors.connectedAddress);
-  const activeWeb3 = useWeb3ReactActivate();
+  const activeWeb3 = useWeb3Activate();
 
   return (
     <AppBar position={"static"}>

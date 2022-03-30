@@ -192,7 +192,7 @@ const slice = createSlice({
         state.selectedId = scripts && scripts.length > 0 ? scripts[0].id : "";
       })
       .addMatcher(statEndpoints.getScript.matchFulfilled, (state, action) => {
-        const { id, code, meta } = action.payload;
+        const { id, code } = action.payload;
         state.scripts[id] &&
           (state.scripts[id] = {
             ...state.scripts[id],

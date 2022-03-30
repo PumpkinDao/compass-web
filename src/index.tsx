@@ -5,7 +5,7 @@ import { Provider } from "react-redux";
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import { store } from "./redux/store";
 import { BrowserRouter } from "react-router-dom";
-import Web3Root from "./web3/Web3Root";
+import Web3Root from "./features/web3-root";
 
 const darkModeTheme = createTheme({
   palette: {

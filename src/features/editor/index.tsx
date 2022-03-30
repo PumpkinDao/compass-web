@@ -30,14 +30,14 @@ import {
   useSaveAction,
   useScriptSync,
 } from "./hooks";
-import { useWeb3ReactActivate } from "../../redux/wallet/hooks";
 import { useDeleteScriptMutation } from "../../redux/stats-api";
 import DoubleConfirmDelete from "../../components/double-confirm-delete";
+import { useWeb3Activate } from "../web3-root/hooks";
 
 const EditorTopBar = () => {
   const wallet = useAppSelector(walletSelectors.connectedAddress);
   const isScriptSyncing = useScriptSync();
-  const activeWeb3 = useWeb3ReactActivate();
+  const activeWeb3 = useWeb3Activate();
 
   return (
     <AppBar position={"static"}>

@@ -60,4 +60,5 @@ const slice = createSlice({
 
 export const reducer = slice.reducer;
 export const { show: showMessageBar, hide: hideMessageBar } = slice.actions;
+export const messageBarActions = slice.actions;
 export const messageBarSelector = createSliceSelector(NAMESPACE);

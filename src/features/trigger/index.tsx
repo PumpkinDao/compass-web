@@ -26,7 +26,6 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { walletSelectors } from "../../redux/wallet";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { triggerActions, triggerSelectors } from "./slice";
-import { useWeb3ReactActivate } from "../../redux/wallet/hooks";
 import * as React from "react";
 import { useEffect, useMemo, useState } from "react";
 import { editorSelectors } from "../editor/slice";
@@ -47,10 +46,11 @@ import DoubleConfirmDelete from "../../components/double-confirm-delete";
 import NewStatementModal from "../new-statement-modal";
 import StatementList from "../../components/statement-list";
 import StatementResultList from "../../components/statement-result-list";
+import { useWeb3Activate } from "../web3-root/hooks";
 
 const TriggerTopBar = () => {
   const wallet = useAppSelector(walletSelectors.connectedAddress);
-  const activeWeb3 = useWeb3ReactActivate();
+  const activeWeb3 = useWeb3Activate();
 
   return (
     <AppBar position={"static"}>
