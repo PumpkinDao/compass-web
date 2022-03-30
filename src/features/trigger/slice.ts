@@ -8,7 +8,7 @@ type TriggerState = {
   isCreating: boolean;
 };
 
-export const NAMESPACE = "TRIGGER";
+export const NAMESPACE = "trigger";
 
 const initialState: TriggerState = {
   triggers: [],
