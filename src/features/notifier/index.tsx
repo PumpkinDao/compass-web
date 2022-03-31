@@ -39,12 +39,9 @@ import AddIcon from "@mui/icons-material/Add";
 import LoadingButton from "@mui/lab/LoadingButton";
 import tests from "./notifier-tester";
 import { showMessageBar } from "../message-bar/slice";
-import { useWeb3Activate } from "../web3-root/hooks";
+import { Login } from "../auth";
 
 const TopBar = () => {
-  const account = useAppSelector(walletSelectors.connectedAccount);
-  const activeWeb3 = useWeb3Activate();
-
   return (
     <AppBar position={"static"}>
       <Toolbar sx={{ justifyContent: "space-between" }}>
@@ -52,15 +49,7 @@ const TopBar = () => {
         <Typography variant={"h6"} color={"inherit"} noWrap>
           Notifier
         </Typography>
-        <Button
-          variant={"contained"}
-          disabled={!!account}
-          onClick={() => activeWeb3()}
-        >
-          {account
-            ? `${account.slice(0, 6)}...${account.slice(-6)}`
-            : "Connect"}
-        </Button>
+        <Login />
       </Toolbar>
     </AppBar>
   );

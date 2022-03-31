@@ -46,12 +46,9 @@ import DoubleConfirmDelete from "../../components/double-confirm-delete";
 import NewStatementModal from "../new-statement-modal";
 import StatementList from "../../components/statement-list";
 import StatementResultList from "../../components/statement-result-list";
-import { useWeb3Activate } from "../web3-root/hooks";
+import { Login } from "../auth";
 
 const TriggerTopBar = () => {
-  const account = useAppSelector(walletSelectors.connectedAccount);
-  const activeWeb3 = useWeb3Activate();
-
   return (
     <AppBar position={"static"}>
       <Toolbar sx={{ justifyContent: "space-between" }}>
@@ -59,15 +56,7 @@ const TriggerTopBar = () => {
         <Typography variant={"h6"} color={"inherit"} noWrap>
           Trigger
         </Typography>
-        <Button
-          variant={"contained"}
-          disabled={!!account}
-          onClick={() => activeWeb3()}
-        >
-          {account
-            ? `${account.slice(0, 6)}...${account.slice(-6)}`
-            : "Connect"}
-        </Button>
+        <Login />
       </Toolbar>
       <TopProgress />
     </AppBar>

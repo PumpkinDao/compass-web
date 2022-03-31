@@ -1,6 +1,6 @@
 import { RootState } from "./store";
 
 export const createSliceSelector =
-  <K extends keyof RootState>(key: K) =>
+  <T>(key: string) =>
   (state: RootState) =>
-    state[key];
+    state[key] as T;

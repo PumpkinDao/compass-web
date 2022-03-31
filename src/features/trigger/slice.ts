@@ -1,6 +1,7 @@
 import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { statEndpoints, Trigger } from "../../redux/stats-api";
 import { createSliceSelector } from "../../redux/utils";
+import { walletActions } from "../../redux/wallet";
 
 type TriggerState = {
   triggers: Trigger[];
@@ -32,6 +33,9 @@ const slice = createSlice({
   },
   extraReducers: (builder) =>
     builder
+      .addMatcher(walletActions.reset.match, (state) =>
+        Object.assign(state, initialState)
+      )
       .addMatcher(
         statEndpoints.listTriggers.matchFulfilled,
         (state, action) => {
@@ -64,7 +68,7 @@ const slice = createSlice({
 
 export const { reducer } = slice;
 export const triggerActions = slice.actions;
-const sliceSelector = createSliceSelector(NAMESPACE);
+const sliceSelector = createSliceSelector<TriggerState>(NAMESPACE);
 
 const allTriggers = createSelector(sliceSelector, (state) => state.triggers);
 const selectedTriggerId = createSelector(

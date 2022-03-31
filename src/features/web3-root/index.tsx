@@ -1,10 +1,9 @@
 import { Web3ReactProvider } from "@web3-react/core";
 import React from "react";
 import { getLibrary } from "./lib";
-import { useEagerConnect, useReduxSync } from "./hooks";
+import { useReduxSync } from "./hooks";
 
 const Connection = () => {
-  useEagerConnect();
   useReduxSync();
 
   return null;

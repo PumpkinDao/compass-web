@@ -1,14 +1,15 @@
 import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
 import { useCallback, useEffect, useState } from "react";
-import { connectors } from "./lib";
-import { useAppDispatch } from "../../redux/hooks";
-import { walletActions } from "../../redux/wallet";
+import { ConnectorName, connectors } from "./lib";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import {
   NoEthereumProviderError,
   UserRejectedRequestError as UserRejectedRequestErrorInjected,
 } from "@web3-react/injected-connector";
 import { UserRejectedRequestError as UserRejectedRequestErrorWalletConnect } from "@web3-react/walletconnect-connector";
 import { messageBarActions } from "../message-bar/slice";
+import { Web3Provider } from "@ethersproject/providers";
+import { walletActions, walletSelectors } from "../../redux/wallet";
 
 export const useEagerConnect = () => {
   const { activate, active } = useWeb3React();
@@ -55,15 +56,11 @@ const getErrorMessage = (error: Error) => {
 
 export const useReduxSync = () => {
   const dispatch = useAppDispatch();
-  const { account, error } = useWeb3React();
+  const { error, account: injectedAccount } = useWeb3React<Web3Provider>();
+  const tried = useEagerConnect();
 
-  useEffect(() => {
-    if (account) {
-      dispatch(walletActions.connectAccount(account));
-    } else {
-      dispatch(walletActions.disconnectAccount());
-    }
-  }, [account]);
+  const reduxAccount = useAppSelector(walletSelectors.connectedAccount);
+  const hasAuth = useAppSelector(walletSelectors.hasAuth);
 
   useEffect(() => {
     if (!error) {
@@ -78,21 +75,31 @@ export const useReduxSync = () => {
       })
     );
   }, [error]);
+
+  useEffect(() => {
+    if (!hasAuth) {
+      dispatch(walletActions.reset());
+    }
+  }, [hasAuth]);
+
+  useEffect(() => {
+    if (
+      tried &&
+      injectedAccount?.toLocaleLowerCase() !== reduxAccount?.toLocaleLowerCase()
+    ) {
+      dispatch(walletActions.reset());
+    }
+  }, [tried, injectedAccount, reduxAccount]);
 };
 
 export const useWeb3Activate = () => {
   const { activate, active } = useWeb3React();
 
   return useCallback(
-    (connectorName: keyof typeof connectors = "injected") => {
-      if (active) {
-        console.warn("Web3 is active already");
-        return;
+    async (connectorName?: ConnectorName) => {
+      if (!active) {
+        return activate(connectors[connectorName ?? "injected"]);
       }
-
-      activate(connectors[connectorName]).catch(() => {
-        // handled already, ignore here
-      });
     },
     [active]
   );

@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { RootState } from "../store";
 
 export const NAMESPACE = "statsApi";
 
@@ -91,15 +92,38 @@ const api = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.REACT_APP_STATS_API_BASE_URL,
     mode: "cors",
+    prepareHeaders: (
+      headers: Headers,
+      api: {
+        getState: () => unknown;
+      }
+    ) => {
+      const { wallet } = (api.getState() as RootState) || {};
+      const { account, auth } = wallet || {};
+
+      if (account && auth?.token) {
+        headers.set("Authorization", auth.token);
+      }
+
+      return headers;
+    },
   }),
   endpoints: (builder) => ({
+    requestSession: builder.mutation<{ expiredAt: number }, string>({
+      query: (auth: string) => ({
+        url: "session",
+        method: "POST",
+        body: { auth },
+      }),
+      transformResponse,
+    }),
     listScripts: builder.query<Omit<Script, "code">[], string>({
       query: (owner: string) => `scripts?owner=${owner}`,
-      transformResponse: transformResponse,
+      transformResponse,
     }),
     getScript: builder.query<Script, string>({
       query: (scriptId: string) => `scripts/${scriptId}`,
-      transformResponse: transformResponse,
+      transformResponse,
     }),
     addScript: builder.mutation<
       { scriptId: string },
@@ -111,7 +135,7 @@ const api = createApi({
         method: "POST",
         body,
       }),
-      transformResponse: transformResponse,
+      transformResponse,
     }),
     updateScript: builder.mutation<
       { scriptId: string },
@@ -122,7 +146,7 @@ const api = createApi({
         method: "PATCH",
         body: body,
       }),
-      transformResponse: transformResponse,
+      transformResponse,
     }),
     deleteScript: builder.mutation<undefined, string>({
       query: (scriptId) => ({
@@ -132,7 +156,7 @@ const api = createApi({
     }),
     getScriptMeta: builder.query<MetaData & { scriptId: string }, string>({
       query: (scriptId: string) => `scripts/${scriptId}/meta`,
-      transformResponse: transformResponse,
+      transformResponse,
     }),
     runScript: builder.mutation<
       {
@@ -146,11 +170,11 @@ const api = createApi({
         method: "POST",
         body: body,
       }),
-      transformResponse: transformResponse,
+      transformResponse,
     }),
     listTriggers: builder.query<Trigger[], string>({
       query: (owner: string) => `triggers?owner=${owner}`,
-      transformResponse: transformResponse,
+      transformResponse,
     }),
     addTrigger: builder.mutation<
       { triggerId: number },
@@ -161,7 +185,7 @@ const api = createApi({
         method: "POST",
         body: body,
       }),
-      transformResponse: transformResponse,
+      transformResponse,
     }),
     deleteTrigger: builder.mutation<undefined, number>({
       query: (triggerId) => ({
@@ -171,11 +195,11 @@ const api = createApi({
     }),
     listTriggerActivities: builder.query<TriggerActivity[], number>({
       query: (triggerId: number) => `triggers/${triggerId}/activities`,
-      transformResponse: transformResponse,
+      transformResponse,
     }),
     listNotifiers: builder.query<Notifier[], string>({
       query: (owner: string) => `notifiers?owner=${owner}`,
-      transformResponse: transformResponse,
+      transformResponse,
     }),
     addNotifier: builder.mutation<undefined, DraftNotifier>({
       query: (body) => ({
@@ -183,14 +207,14 @@ const api = createApi({
         method: "POST",
         body: body,
       }),
-      transformResponse: transformResponse,
+      transformResponse,
     }),
     deleteNotifier: builder.mutation<Notifier[], number>({
       query: (notifierId) => ({
         url: `notifiers/${notifierId}`,
         method: "DELETE",
       }),
-      transformResponse: transformResponse,
+      transformResponse,
     }),
     addStatement: builder.mutation<undefined, DraftStatement>({
       query: ({ triggerId, ...body }) => ({
@@ -198,11 +222,11 @@ const api = createApi({
         method: "POST",
         body: { ...body, severity: "info" },
       }),
-      transformResponse: transformResponse,
+      transformResponse,
     }),
     listStatements: builder.query<Statement[], number>({
       query: (triggerId) => `triggers/${triggerId}/statements`,
-      transformResponse: transformResponse,
+      transformResponse,
     }),
     deleteStatement: builder.mutation<undefined, number>({
       query: (statementId: number) => ({
@@ -217,6 +241,7 @@ export const {
   reducer,
   middleware,
   endpoints: statEndpoints,
+  useRequestSessionMutation,
   useLazyGetScriptQuery,
   useLazyListScriptsQuery,
   useAddScriptMutation,

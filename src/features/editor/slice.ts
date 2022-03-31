@@ -7,6 +7,7 @@ import {
 } from "@reduxjs/toolkit";
 import { createSliceSelector } from "../../redux/utils";
 import { Script, statEndpoints } from "../../redux/stats-api";
+import { walletActions } from "../../redux/wallet";
 
 export const NAMESPACE = "editor";
 
@@ -105,6 +106,9 @@ const slice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addMatcher(walletActions.reset.match, (state) =>
+        Object.assign(state, initialState)
+      )
       .addMatcher(statEndpoints.addScript.matchFulfilled, (state, action) => {
         const { scriptId: originScriptId } = action.payload;
         const {
@@ -232,12 +236,10 @@ const deleteScriptAndUpdateState = (
 export const { reducer } = slice;
 export const editorActions = slice.actions;
 
-const sliceSelector = createSliceSelector(NAMESPACE);
+const sliceSelector = createSliceSelector<EditorState>(NAMESPACE);
 
-const allScripts = createSelector(
-  sliceSelector,
-  (state) => Object.values(state.scripts).sort(descScripts)
-  // .map((i) => ({ id: i.id, name: i.meta.name }))
+const allScripts = createSelector(sliceSelector, (state) =>
+  Object.values(state.scripts).sort(descScripts)
 );
 
 const descScripts = (a: Pick<Script, "meta">, b: Pick<Script, "meta">) =>

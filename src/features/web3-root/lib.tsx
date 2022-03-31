@@ -9,7 +9,7 @@ const RPC_URLS = {
   1: process.env.REACT_APP_EVM_1_RPC_URL as string,
 };
 
-const injected = new InjectedConnector({});
+const injected = new InjectedConnector({ supportedChainIds: [1] });
 
 const walletConnect = new WalletConnectConnector({
   rpc: RPC_URLS,
@@ -22,6 +22,7 @@ export const connectors = {
   injected,
   walletConnect,
 };
+export type ConnectorName = keyof typeof connectors;
 
 export const getLibrary = (provider: unknown): Web3Provider => {
   const library = new Web3Provider(provider as never);

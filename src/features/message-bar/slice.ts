@@ -35,30 +35,10 @@ const slice = createSlice({
       });
     },
   },
-  // extraReducers: (builder) => {
-  //   builder.addMatcher(
-  //     (action) => {
-  //       return (
-  //         action.type.endsWith("/rejected") && typeof action.error === "object"
-  //       );
-  //     },
-  //     (state, action) => {
-  //       console.error("Got error action: ", action);
-  //
-  //       const { message } = action.error;
-  //       if (message) {
-  //         Object.assign(state, {
-  //           status: "open",
-  //           message: message,
-  //           severity: "error",
-  //         });
-  //       }
-  //     }
-  //   );
-  // },
 });
 
 export const reducer = slice.reducer;
 export const { show: showMessageBar, hide: hideMessageBar } = slice.actions;
 export const messageBarActions = slice.actions;
-export const messageBarSelector = createSliceSelector(NAMESPACE);
+export const messageBarSelector =
+  createSliceSelector<MessageBarState>(NAMESPACE);

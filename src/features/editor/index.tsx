@@ -2,7 +2,6 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import {
   AppBar,
   Box,
-  Button,
   CircularProgress,
   IconButton,
   LinearProgress,
@@ -32,12 +31,10 @@ import {
 } from "./hooks";
 import { useDeleteScriptMutation } from "../../redux/stats-api";
 import DoubleConfirmDelete from "../../components/double-confirm-delete";
-import { useWeb3Activate } from "../web3-root/hooks";
+import { Login } from "../auth";
 
 const EditorTopBar = () => {
-  const account = useAppSelector(walletSelectors.connectedAccount);
   const isScriptSyncing = useScriptSync();
-  const activeWeb3 = useWeb3Activate();
 
   return (
     <AppBar position={"static"}>
@@ -46,15 +43,7 @@ const EditorTopBar = () => {
         <Typography variant={"h6"} color={"inherit"} noWrap>
           Editor
         </Typography>
-        <Button
-          variant={"contained"}
-          disabled={!!account}
-          onClick={() => activeWeb3()}
-        >
-          {account
-            ? `${account.slice(0, 6)}...${account.slice(-6)}`
-            : "Connect"}
-        </Button>
+        <Login />
       </Toolbar>
       {isScriptSyncing && (
         <Box>
