@@ -163,7 +163,7 @@ const api = createApi({
         timeUsed: number;
         result: { status: "fulfilled" | "rejected"; value: unknown };
       },
-      { scriptId: string; params: Record<string, unknown> }
+      { scriptId: string; params: string }
     >({
       query: ({ scriptId, ...body }) => ({
         url: `scripts/${scriptId}/run`,

@@ -85,12 +85,7 @@ export const useRunAction = (): [boolean, VoidFunction] => {
         return;
       }
 
-      try {
-        const params = JSON.parse(script.testParamStr);
-        await runScript({ scriptId: script.id, params });
-      } catch (e) {
-        console.error("Invalid params: ", script.testParamStr);
-      }
+      await runScript({ scriptId: script.id, params: script.testParamStr });
     }, [script]),
   ];
 };
