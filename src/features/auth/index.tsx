@@ -8,13 +8,25 @@ import { ConnectorName } from "../web3-root/lib";
 import { Web3Provider } from "@ethersproject/providers";
 import { useRequestSessionMutation } from "../../redux/stats-api";
 import LoadingButton from "@mui/lab/LoadingButton";
+import { getAddress } from "@ethersproject/address";
 
-const generateAuthMsg = (blockHash: string) => `
-Welcome to compassdao.io.
-Only sign this message for a trusted client!
+const generateAuthMsg = (nonce: string, address: string) => {
+  address = getAddress(address); // to checksum address
 
-blockHash: ${blockHash}
-`; // todo change to correct host name
+  return `
+Welcome to CompassDAO!
+Click to sign in and accept the CompassDAO Terms of Service: https://compassdao.io
+
+This request will not trigger a blockchain transaction or cost any gas fees.
+Your authentication status will reset after 24 hours.
+
+wallet:
+${address}
+
+nonce: 
+${nonce}
+`;
+}; // todo change to correct host name
 
 export const Login = () => {
   const { account, library } = useWeb3React<Web3Provider>();
@@ -27,7 +39,7 @@ export const Login = () => {
 
   const doAuth = useCallback(async (library: Web3Provider, account: string) => {
     const { hash: blockHash } = await library.getBlock("latest");
-    const message = generateAuthMsg(blockHash);
+    const message = generateAuthMsg(blockHash, account);
     const signature = await library.getSigner(account).signMessage(message);
 
     requestSession(
